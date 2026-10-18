@@ -1,5 +1,6 @@
 import { parseLocal, myt, hhmm, loadBundle, RouteIndex, routeById, fxPoints, fxView, fxRate } from "./core.js";
 import { NetworkFeed, requestSpacing } from "./live.js";
+import { prepareLines, nearbyStops, stopArrivals, TrafficHistory } from "./nearby.js";
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const DEFAULT=["T7900","T7860","P0010","P0020"];
@@ -7,6 +8,8 @@ const palette=["#2F7FED","#0E9F76","#8B5CF6","#E5487F","#C36C1E","#177E89","#8E5
 const portraits=["dog","gentleman","hamster","cat"];
 let routes=[],byId=new Map(),shown=new Set(DEFAULT),buses=[],selected=null,feed=null,position=null,rate=null,latestFeedTime=null,savedSelection=false;
 const shapes=new Map(),loadingShapes=new Map(),markers=new Map();
+let nearbyActive=false,nearbyTicket=0,nearbyLines=[],nearbyChoices=[],nearbyStop=null,stopMarker=null,locationTime=0,locationAccuracy=0;
+const trafficHistory=new TrafficHistory();
 try{const saved=JSON.parse(localStorage.getItem("transit.routes"));if(Array.isArray(saved)&&saved.every(id=>typeof id==="string")){shown=new Set(saved);savedSelection=true;}}catch(e){}
 const map=L.map("map",{minZoom:9,maxZoom:19,preferCanvas:true}).setView([3.1135,101.649],12);
 L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
@@ -60,11 +63,13 @@ async function drawShapes(){
 }
 function applySelection(){
   selected=null;save();feed?.setRoutes([...shown]);renderOptions();drawShapes();renderBuses();
+  if(nearbyActive)showNearby();
 }
 function focusBus(bus){
   selected=bus.route+"/"+bus.id;map.flyTo(bus.pos,Math.max(15,map.getZoom()),{duration:.5});getShape(bus.route).then(()=>{drawShapes();renderBuses();});renderBuses();
 }
 function renderBuses(){
+  trafficHistory.observe(buses);
   const visible=buses.filter(b=>shown.has(b.route));const seen=new Set();
   for(const bus of visible){
     const key=bus.route+"/"+bus.id;seen.add(key);let marker=markers.get(key);
@@ -84,7 +89,51 @@ function renderBuses(){
     return '<button class="vehicle'+(key===selected?' selected':'')+'" data-key="'+esc(key)+'" style="--route:'+color(bus.route)+'"><img class="portrait" src="assets/crew/'+portrait(bus.route)+'.jpg" alt=""><span><b>'+esc(routeName(bus.route))+' · '+esc(bus.id)+'</b><span>'+esc(next)+'</span><small>'+(bus.speed==null?"":bus.speed+" km/h · ")+'GPS '+age(bus.gpsMs)+'</small></span></button>';
   }).join("")||'<p class="muted">'+(shown.size?"等待有效车辆位置。暂时没有位置不代表线路停运。":"先选择一条线路。")+'</p>';
   $("vehicles").querySelectorAll("button").forEach(button=>button.onclick=()=>{const bus=visible.find(b=>b.route+"/"+b.id===button.dataset.key);if(bus)focusBus(bus);});
+  renderNearby();
 }
+function selectNearby(stop){
+  nearbyStop=stop;if(stopMarker)map.removeLayer(stopMarker);
+  stopMarker=L.marker(stop.pos,{icon:L.divIcon({className:'',html:'<div class="nearest-stop-dot"></div>',iconSize:[22,22],iconAnchor:[11,11]})}).addTo(map).bindTooltip(esc(stop.name),{permanent:true,direction:'top'});
+  map.fitBounds(L.latLngBounds([position,stop.pos]),{padding:[55,55],maxZoom:16});renderNearby();
+}
+async function showNearby(){
+  nearbyActive=true;const ticket=++nearbyTicket;
+  $("nearby-panel").hidden=false;nearbyStop=null;nearbyLines=[];$('nearby-distance').textContent='';$('nearby-load-status').textContent='';
+  if(stopMarker){map.removeLayer(stopMarker);stopMarker=null;}
+  $("nearby-options").innerHTML='';$("nearby-arrivals").innerHTML='';
+  if(!shown.size){$("nearby-title").textContent='请先选择公交线路';return;}
+  if(!position){$("nearby-title").textContent='请先允许获取你的位置';return;}
+  $("nearby-title").textContent='正在查找所选线路的最近站点…';
+  const ids=[...shown];let failed=0;
+  for(let offset=0;offset<ids.length;offset+=8){
+    const batch=await Promise.all(ids.slice(offset,offset+8).map(getShape));
+    if(ticket!==nearbyTicket)return;
+    for(const bundle of batch)if(bundle)nearbyLines.push(...prepareLines(bundle.lines));else failed++;
+  }
+  nearbyChoices=nearbyStops(nearbyLines,position);
+  $("nearby-load-status").textContent=failed?failed+' 条线路站点未能读取，可点击最近站点重试。':'';
+  if(!nearbyChoices.length){$("nearby-title").textContent='所选线路暂无可用站点，请换一条线路或重试';return;}
+  selectNearby(nearbyChoices[0]);
+}
+function renderNearby(){
+  if(!nearbyActive||!nearbyStop)return;
+  const s=nearbyStop;
+  $("nearby-title").textContent=s.name;
+  $("nearby-distance").textContent='距你直线约 '+Math.round(s.distance)+' 米 · 定位精度约 '+Math.round(locationAccuracy)+' 米'+(s.distance>2000?' · 站点较远，可换线路查看':'');
+  $("nearby-options").innerHTML=nearbyChoices.map((x,i)=>'<button class="'+(x.key===s.key?'on':'')+'" data-stop="'+i+'" aria-pressed="'+(x.key===s.key)+'">'+esc(x.name)+' · '+Math.round(x.distance)+' 米<br>'+esc([...x.routes].map(routeName).join(' / '))+'</button>').join('');
+  $("nearby-options").querySelectorAll('button').forEach(button=>button.onclick=()=>selectNearby(nearbyChoices[Number(button.dataset.stop)]));
+  if(Date.now()-locationTime>120000){$("nearby-arrivals").textContent='你的位置已超过两分钟，请点“最近站点”重新定位。';return;}
+  const result=stopArrivals(nearbyLines,s,buses.filter(b=>shown.has(b.route)),Date.now(),trafficHistory);
+  $("nearby-arrivals").innerHTML=result.arrivals.slice(0,5).map((a,i)=>'<button data-arrival="'+i+'"><b>'+esc(routeName(a.bus.route))+' · '+esc(a.bus.id)+'</b><strong>'+(a.minutes===0?'已到站附近':'预计约 '+a.minutes+' 分钟')+'</strong><small>'+esc(a.headsign||'沿当前行驶方向')+'</small><small>沿线约 '+Math.round(a.meters)+' 米 · '+(a.bus.speed??'—')+' km/h · GPS '+age(a.bus.gpsMs)+'</small><small>'+esc(a.traffic?.label||'到站附近')+(a.traffic?.historical?' · 近期均速 '+a.traffic.speed.toFixed(1)+' km/h':'')+'</small></button>').join('')||'<p class="muted">暂无可确认正驶向此站的车辆；不代表线路停运。</p>';
+  $("nearby-arrivals").querySelectorAll('button').forEach(button=>button.onclick=()=>focusBus(result.arrivals[Number(button.dataset.arrival)].bus));
+  if(result.unknown.length){const note=document.createElement('p');note.className='muted';note.textContent=result.unknown.slice(0,3).map(x=>routeName(x.bus.route)+' '+x.bus.id+'：'+x.reason).join('；');$("nearby-arrivals").append(note);}
+}
+$("nearest-stop").onclick=()=>{
+  if(!shown.size){showNearby();return;}
+  nearbyActive=true;
+  if(!position||Date.now()-locationTime>120000)$("locate").click();else showNearby();
+};
+setInterval(renderNearby,10000);
 $("route-search").oninput=renderOptions;
 $("all-routes").onclick=()=>{shown=new Set(routes.map(r=>r.id));applySelection();$("route-search").value="";renderOptions();};
 $("usual-routes").onclick=()=>{shown=new Set(DEFAULT.filter(id=>byId.has(id)));applySelection();};
@@ -100,10 +149,12 @@ $("locate").onclick=()=>{
   label.textContent="正在获取你的位置…";$("locate").disabled=true;
   navigator.geolocation.getCurrentPosition(p=>{
     $("locate").disabled=false;position={lat:p.coords.latitude,lng:p.coords.longitude};
+    locationTime=Date.now();locationAccuracy=p.coords.accuracy;
     if(selfMarker)map.removeLayer(selfMarker);if(accuracy)map.removeLayer(accuracy);
     selfMarker=L.marker(position,{icon:L.divIcon({className:"",html:'<div class="location-dot"></div>',iconSize:[16,16],iconAnchor:[8,8]})}).addTo(map).bindTooltip("我的位置");
     accuracy=L.circle(position,{radius:p.coords.accuracy,color:"#287bed",weight:1,fillOpacity:.08}).addTo(map);
     map.setView(position,15);label.textContent="我的位置 · 精度约 "+Math.round(p.coords.accuracy)+" 米";
+    if(nearbyActive)showNearby();
   },e=>{$("locate").disabled=false;label.textContent=e.code===1?"未允许定位，你仍可正常查车":e.code===3?"定位超时，请稍后重试":"暂时无法获取位置";},{enableHighAccuracy:true,timeout:15000,maximumAge:30000});
 };
 map.on("zoomend",drawShapes);
@@ -137,4 +188,3 @@ async function main(){
 window.addEventListener("pagehide",()=>feed?.stop());
 window.addEventListener("pageshow",e=>{if(e.persisted)feed?.start();});
 main();
-
