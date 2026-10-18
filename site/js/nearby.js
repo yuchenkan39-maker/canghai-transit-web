@@ -1,4 +1,5 @@
 import { approxM, bearing } from './core.js';
+import { estimatePath } from './prediction.js';
 const diff=(a,b)=>Math.abs(((a-b+540)%360)-180);
 // Project onto route segments, retaining along-route distance rather than straight-line distance.
 function project(line,pos,heading=null,minAlong=0){
@@ -37,7 +38,7 @@ export class TrafficHistory{
   constructor(){this.samples=new Map();}
   observe(buses,now=Date.now()){
     for(const b of buses){
-      if(!Number.isFinite(b.speed)||b.speed<0||b.speed>100||!Number.isFinite(b.gpsMs)||now-b.gpsMs>90000)continue;
+      if(!Number.isFinite(b.speed)||b.speed<0||b.speed>100||!Number.isFinite(b.gpsMs)||now-b.gpsMs>90000||b.gpsMs>now+30000)continue;
       const key=b.route+'/'+b.id,list=this.samples.get(key)||[];
       if(!list.length||b.gpsMs>list[list.length-1].time)list.push({time:b.gpsMs,speed:b.speed});
       this.samples.set(key,list.filter(s=>now-s.time<=180000));
@@ -53,7 +54,7 @@ export class TrafficHistory{
     return {speed,historical:true,label:speed<3?'持续停车或低速，路况待确认':speed<12?'持续低速，疑似拥堵或停站':speed<20?'行驶偏慢（车速推断）':'行驶较顺畅（车速推断）'};
   }
 }
-export function stopArrivals(lines,stop,buses,now=Date.now(),traffic=null){
+export function stopArrivals(lines,stop,buses,now=Date.now(),traffic=null,history=null){
   const arrivals=[],unknown=[];
   for(const bus of buses){
     if(!stop.routes.has(bus.route))continue;
@@ -70,8 +71,18 @@ export function stopArrivals(lines,stop,buses,now=Date.now(),traffic=null){
     if(meters<=35&&approxM(bus.pos,stop.pos)<=50){arrivals.push({bus,meters,minutes:0,headsign:line.headsign});continue;}
     const road=traffic?.view(bus,now)||{speed:bus.speed,label:'路况待判断',historical:false};
     if(!Number.isFinite(road.speed)||road.speed<3||road.speed>100){unknown.push({bus,reason:road.speed<3?'车辆停车或持续低速，暂不估算':'车速不可用，暂不估算'});continue;}
-    // Recent time-weighted speeds include slow traffic and stopping; never assume it clears ahead.
-    arrivals.push({bus,meters,minutes:Math.max(1,Math.ceil(meters/(road.speed/3.6)/60)),headsign:line.headsign,traffic:road});
+    const peers=[];
+    for(const other of buses){
+      if(other.id===bus.id||!Number.isFinite(other.angle)||!Number.isFinite(other.gpsMs)||now-other.gpsMs>90000||other.gpsMs>now+30000)continue;
+      const recent=traffic?.view(other,now);if(!recent?.historical||recent.speed<3||recent.speed>65)continue;
+      // A vehicle waiting at a boarding stop is not evidence of road congestion.
+      if(line.stops.some(s=>approxM(s.pos,other.pos)<45))continue;
+      const location=project(line,other.pos,other.angle);
+      if(!location||location.gap>45||location.turn>45||location.along<hit.along||location.along>targets[0].along)continue;
+      peers.push({id:other.id,key:other.route+'/'+other.id,along:location.along,speed:recent.speed});
+    }
+    const prediction=estimatePath({line,from:hit.along,to:targets[0].along,now,bus,road,peers,history});
+    arrivals.push({bus,meters,minutes:prediction?.minutes??Math.max(1,Math.ceil(meters/(road.speed/3.6)/60)),headsign:line.headsign,traffic:road,prediction});
   }
   return {arrivals:arrivals.sort((a,b)=>a.minutes-b.minutes||a.meters-b.meters),unknown};
 }

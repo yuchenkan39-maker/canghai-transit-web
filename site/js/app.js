@@ -1,6 +1,7 @@
 import { parseLocal, myt, hhmm, loadBundle, RouteIndex, routeById, fxPoints, fxView, fxRate } from "./core.js";
 import { NetworkFeed, requestSpacing } from "./live.js";
-import { prepareLines, nearbyStops, stopArrivals, TrafficHistory } from "./nearby.js";
+import { prepareLines, nearbyStops, stopArrivals, TrafficHistory } from "./nearby.js?v=eta2";
+import { HistoricalProfiles } from "./prediction.js";
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const DEFAULT=["T7900","T7860","P0010","P0020"];
@@ -10,6 +11,25 @@ let routes=[],byId=new Map(),shown=new Set(DEFAULT),buses=[],selected=null,feed=
 const shapes=new Map(),loadingShapes=new Map(),markers=new Map();
 let nearbyActive=false,nearbyTicket=0,nearbyLines=[],nearbyChoices=[],nearbyStop=null,stopMarker=null,locationTime=0,locationAccuracy=0;
 const trafficHistory=new TrafficHistory();
+const historical=new HistoricalProfiles(),historyRequests=new Map();let historyReady=null;
+function loadHistorical(){
+  if(historyReady)return historyReady;
+  historyReady=fetch('history/catalog.json',{signal:AbortSignal.timeout(15000)}).then(r=>{if(!r.ok)throw Error('历史参考暂不可用');return r.json();}).then(c=>{
+    historical.setCatalog(c);if(!historical.catalog)throw Error('历史数据格式不匹配');
+    $('prediction-status').textContent='历史参考：'+c.sourceMonth+' · '+Object.keys(c.routes).length+' 条线路 · 工作日／周末、时段及方向分开统计。未覆盖路段使用车速估算；未接入商业道路路况。';
+    return c;
+  }).catch(()=>{$('prediction-status').textContent='历史参考暂不可用，当前使用实时公交车速估算。';return null;});
+  return historyReady;
+}
+function ensureHistorical(id){
+  if(historyRequests.has(id))return historyRequests.get(id);
+  const promise=loadHistorical().then(async c=>{
+    const entry=c?.routes?.[id];if(!entry)return;
+    const r=await fetch('history/'+entry.file,{signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error('历史线路未读取');
+    historical.setRoute(id,await r.json());renderNearby();
+  }).catch(()=>{historyRequests.delete(id);});
+  historyRequests.set(id,promise);return promise;
+}
 try{const saved=JSON.parse(localStorage.getItem("transit.routes"));if(Array.isArray(saved)&&saved.every(id=>typeof id==="string")){shown=new Set(saved);savedSelection=true;}}catch(e){}
 const map=L.map("map",{minZoom:9,maxZoom:19,preferCanvas:true}).setView([3.1135,101.649],12);
 L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
@@ -43,7 +63,7 @@ async function getShape(id){
   const route=byId.get(id);if(!route)return null;
   const promise=fetch("network/"+route.file).then(r=>{if(!r.ok)throw Error("线路文件暂不可用");return r.json();}).then(data=>{
     const bundle=loadBundle({routes:[{id,name:route.name,lines:data.lines.map(l=>({dir:"",headsign:l.headsign,shape:l.shape,stops:l.stops}))}]});
-    const result={...bundle,index:new RouteIndex(bundle.lines)};shapes.set(id,result);return result;
+    const result={...bundle,index:new RouteIndex(bundle.lines),prepared:prepareLines(bundle.lines)};shapes.set(id,result);ensureHistorical(id);return result;
   }).catch(()=>null).finally(()=>loadingShapes.delete(id));
   loadingShapes.set(id,promise);return promise;
 }
@@ -108,7 +128,7 @@ async function showNearby(){
   for(let offset=0;offset<ids.length;offset+=8){
     const batch=await Promise.all(ids.slice(offset,offset+8).map(getShape));
     if(ticket!==nearbyTicket)return;
-    for(const bundle of batch)if(bundle)nearbyLines.push(...prepareLines(bundle.lines));else failed++;
+    for(const bundle of batch)if(bundle)nearbyLines.push(...bundle.prepared);else failed++;
   }
   nearbyChoices=nearbyStops(nearbyLines,position);
   $("nearby-load-status").textContent=failed?failed+' 条线路站点未能读取，可点击最近站点重试。':'';
@@ -123,8 +143,8 @@ function renderNearby(){
   $("nearby-options").innerHTML=nearbyChoices.map((x,i)=>'<button class="'+(x.key===s.key?'on':'')+'" data-stop="'+i+'" aria-pressed="'+(x.key===s.key)+'">'+esc(x.name)+' · '+Math.round(x.distance)+' 米<br>'+esc([...x.routes].map(routeName).join(' / '))+'</button>').join('');
   $("nearby-options").querySelectorAll('button').forEach(button=>button.onclick=()=>selectNearby(nearbyChoices[Number(button.dataset.stop)]));
   if(Date.now()-locationTime>120000){$("nearby-arrivals").textContent='你的位置已超过两分钟，请点“最近站点”重新定位。';return;}
-  const result=stopArrivals(nearbyLines,s,buses.filter(b=>shown.has(b.route)),Date.now(),trafficHistory);
-  $("nearby-arrivals").innerHTML=result.arrivals.slice(0,5).map((a,i)=>'<button data-arrival="'+i+'"><b>'+esc(routeName(a.bus.route))+' · '+esc(a.bus.id)+'</b><strong>'+(a.minutes===0?'已到站附近':'预计约 '+a.minutes+' 分钟')+'</strong><small>'+esc(a.headsign||'沿当前行驶方向')+'</small><small>沿线约 '+Math.round(a.meters)+' 米 · '+(a.bus.speed??'—')+' km/h · GPS '+age(a.bus.gpsMs)+'</small><small>'+esc(a.traffic?.label||'到站附近')+(a.traffic?.historical?' · 近期均速 '+a.traffic.speed.toFixed(1)+' km/h':'')+'</small></button>').join('')||'<p class="muted">暂无可确认正驶向此站的车辆；不代表线路停运。</p>';
+  const result=stopArrivals(nearbyLines,s,buses.filter(b=>shown.has(b.route)),Date.now(),trafficHistory,historical);
+  $("nearby-arrivals").innerHTML=result.arrivals.slice(0,5).map((a,i)=>'<button data-arrival="'+i+'"><b>'+esc(routeName(a.bus.route))+' · '+esc(a.bus.id)+'</b><strong>'+(a.minutes===0?'已到站附近':a.prediction?'预计约 '+a.prediction.low+'–'+a.prediction.high+' 分钟':'预计约 '+a.minutes+' 分钟')+'</strong><small>'+esc(a.headsign||'沿当前行驶方向')+'</small><small>沿线约 '+Math.round(a.meters)+' 米 · '+(a.bus.speed??'—')+' km/h · GPS '+age(a.bus.gpsMs)+'</small><small>'+esc(a.prediction?.label||a.traffic?.label||'到站附近')+(a.traffic?.historical?' · 近期均速 '+a.traffic.speed.toFixed(1)+' km/h':'')+'</small><small>'+esc(a.prediction?.source||'')+'</small><small>'+esc(a.minutes===0?'':a.prediction?.historyMonth?'历史月份 '+a.prediction.historyMonth+(a.prediction.staleHistory?'（较旧，仅供参考）':''):'无匹配的历史路段参考')+'</small></button>').join('')||'<p class="muted">暂无可确认正驶向此站的车辆；不代表线路停运。</p>';
   $("nearby-arrivals").querySelectorAll('button').forEach(button=>button.onclick=()=>focusBus(result.arrivals[Number(button.dataset.arrival)].bus));
   if(result.unknown.length){const note=document.createElement('p');note.className='muted';note.textContent=result.unknown.slice(0,3).map(x=>routeName(x.bus.route)+' '+x.bus.id+'：'+x.reason).join('；');$("nearby-arrivals").append(note);}
 }
@@ -172,7 +192,7 @@ async function fx(){
   try{const r=await fetch("https://api.frankfurter.dev/v1/latest?base=MYR&symbols=CNY",{signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error();const d=await r.json();rate=d.rates.CNY;if(!Number.isFinite(rate))throw Error();$("fx").innerHTML='<p>1 令吉 = <span class="rate">'+fxRate(rate)+'</span> 元</p><p class="muted">参考价更新于 '+esc(d.date)+'，实际换汇以服务商报价为准。</p>';conversion();}catch(e){$("fx").textContent="汇率暂时不可用";}
 }
 async function main(){
-  weather();fx();setInterval(weather,600000);setInterval(fx,10800000);
+  loadHistorical();weather();fx();setInterval(weather,600000);setInterval(fx,10800000);
   try{
     const response=await fetch("network/catalog.json");if(!response.ok)throw Error("线路目录读取失败");const catalog=await response.json();
     // These route codes are directly queryable with the original RKL socket scheme.
