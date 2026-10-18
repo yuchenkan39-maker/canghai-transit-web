@@ -1,0 +1,36 @@
+name: Build historical transit profiles
+on:
+  push:
+    paths: ['tools/build_history.py', '.github/workflows/history-build.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: history-build
+  cancel-in-progress: true
+jobs:
+  history:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests pyarrow
+      - run: python tools/build_network.py
+      - run: python tools/build_history.py
+      - name: Export compact profiles for review
+        shell: python
+        run: |
+          import base64, json
+          from pathlib import Path
+          for file in sorted(Path('site/history').glob('*.json')):
+              data=base64.b64encode(file.read_bytes()).decode()
+              for i in range(0,len(data),12000):
+                  print('PROFILE_CHUNK '+json.dumps({'file':file.name,'offset':i,'data':data[i:i+12000]}))
+      - uses: actions/upload-artifact@v4
+        with:
+          name: historical-profiles
+          path: site/history
+          retention-days: 7
