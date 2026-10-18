@@ -1,0 +1,11 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f8f5ef"><title>沧海出行 · 公交实时地图</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"><link rel="stylesheet" href="style.css"></head><body>
+<main><header><img src="assets/crew/dog.jpg" alt="" width="44" height="44"><div><h1>沧海出行</h1><p>Rapid KL 公交实时地图 · 天气 · 汇率</p></div><span id="network-count">读取线路目录…</span></header>
+<section class="toolbar" aria-label="选择线路"><label>找线路<input id="route-search" type="search" placeholder="如 780、T788、PJ01 或地名" autocomplete="off"></label><button id="all-routes">全网看车</button><button id="usual-routes">常用四线</button><button id="clear-routes">清空选择</button><button id="locate">◎ 我的位置</button><button id="fit">查看车辆</button></section>
+<details class="catalog" open><summary>线路目录与筛选 <span id="selection-count"></span></summary><div id="route-options" role="group" aria-label="线路目录"></div></details>
+<div class="status" role="status"><span id="connection">正在读取目录…</span><span id="bus-count"></span></div><p id="query-note" class="muted"></p>
+<section class="map-wrap" aria-label="公交地图"><div id="map"></div><div id="location-status" role="status"></div></section>
+<section id="vehicles" class="vehicles" aria-label="实时车辆"></section>
+<div class="life"><section class="card"><h2><img src="assets/crew/hamster.jpg" alt="">天气</h2><div id="weather">正在读取马大附近天气…</div></section><section class="card"><h2><img src="assets/crew/gentleman.jpg" alt="">令吉兑人民币</h2><div id="fx">正在读取汇率…</div><label>令吉金额<input id="amount" type="number" min="0" step="1" value="1000"></label><p id="conversion"></p></section></div>
+<p class="muted">车辆位置来自 Rapid Bus 官方实时推送。只有收到且未过期的位置才显示；没有车不等于停运。全网查询采用分批轮询，位置以各车标注的 GPS 时间为准。</p>
+<footer><span>沧海出行 · 一个人的出门小工具</span><details><summary aria-label="作者的小角落">✦</summary><figure><img src="assets/crew/author.jpg" alt="作者的牛仔照片" loading="lazy"><figcaption>作者偶尔也来巡逻一下。<small>祝你每次出门，都刚好赶上。</small></figcaption></figure></details></footer>
+</main><script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script><script type="module" src="js/app.js"></script></body></html>

@@ -1,0 +1,3778 @@
+{
+  "generatedAt": 1792303508,
+  "static": [
+    {
+      "category": "rapid-bus-kl",
+      "routes": 137,
+      "stops": 4068,
+      "trips": 2097
+    },
+    {
+      "category": "rapid-bus-mrtfeeder",
+      "routes": 91,
+      "stops": 2117,
+      "trips": 6291
+    }
+  ],
+  "requested": [
+    {
+      "id": "B1000",
+      "name": "SUNWAY LINE",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U3000",
+      "name": "300",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U3030",
+      "name": "303",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U4000",
+      "name": "400",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U4200",
+      "name": "420",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U4210",
+      "name": "421",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U4500",
+      "name": "450",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U5800",
+      "name": "580",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U5810",
+      "name": "581",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U5900",
+      "name": "590",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U7510",
+      "name": "751",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U7520",
+      "name": "752",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U7700",
+      "name": "770",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T3500",
+      "name": "T350",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T3510",
+      "name": "T351",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S0030",
+      "name": "KJ01",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T3030",
+      "name": "T303",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U5410",
+      "name": "541",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T6010",
+      "name": "T601",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T6040",
+      "name": "T604",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T6050",
+      "name": "T605",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S0060",
+      "name": "BTG1",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T6000",
+      "name": "T600",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T6030",
+      "name": "T603",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7740",
+      "name": "T774",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7760",
+      "name": "T776",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S4020",
+      "name": "SA02",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U6510",
+      "name": "651",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U6520",
+      "name": "652",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T5800",
+      "name": "T580",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T5810",
+      "name": "T581",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U6000",
+      "name": "600",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U6400",
+      "name": "640",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U6500",
+      "name": "650",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T6400",
+      "name": "T640",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U7830",
+      "name": "783",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7820",
+      "name": "T782",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7900",
+      "name": "T790",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7860",
+      "name": "T786",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7870",
+      "name": "T787",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7880",
+      "name": "T788",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7890",
+      "name": "T789",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7910",
+      "name": "T791",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "P0010",
+      "name": "PJ01",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "P0020",
+      "name": "PJ02",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "P0030",
+      "name": "PJ03",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "P0040",
+      "name": "PJ04",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S5010",
+      "name": "MENARA PRASARANA",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T8500",
+      "name": "T850",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S4050",
+      "name": "SA05",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S1030",
+      "name": "AJ2A",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S1040",
+      "name": "AJ2B",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S1050",
+      "name": "AJ03",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S2060",
+      "name": "BTG2",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S1060",
+      "name": "KJ02",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S1070",
+      "name": "KJ03",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U7720",
+      "name": "772",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U7800",
+      "name": "780",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U2000",
+      "name": "200",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U2200",
+      "name": "220",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U2220",
+      "name": "222",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U2500",
+      "name": "250",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U2510",
+      "name": "251",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T2000",
+      "name": "T200",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T2010",
+      "name": "T201",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T2020",
+      "name": "T202",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T2220",
+      "name": "T222",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T2500",
+      "name": "T250",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T2510",
+      "name": "T251",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T2230",
+      "name": "T223",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T2240",
+      "name": "T224",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U1710",
+      "name": "171",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U1730",
+      "name": "173",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U1800",
+      "name": "180",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U1900",
+      "name": "190",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U2020",
+      "name": "202",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U3020",
+      "name": "302",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U8210",
+      "name": "821",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U8220",
+      "name": "822",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "P0050",
+      "name": "PJ05",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "P0060",
+      "name": "PJ06",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S0070",
+      "name": "MPS1",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S1140",
+      "name": "AJ04",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S1170",
+      "name": "KJ04",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S4070",
+      "name": "SA07",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S4080",
+      "name": "SA08",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S0040",
+      "name": "AJ01",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S1190",
+      "name": "MPS2A",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S6060",
+      "name": "PAVILION BUKIT JALIL (PAVBJ)",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S1390",
+      "name": "MPS3",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S1490",
+      "name": "MPS4",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "P1010",
+      "name": "P101",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "P1020",
+      "name": "P102",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "P1030",
+      "name": "P103",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "P1040",
+      "name": "P104",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "P1050",
+      "name": "P105",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "P1060",
+      "name": "P106",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "P1080",
+      "name": "P108",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U1510",
+      "name": "151",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T8510",
+      "name": "T851",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T3008",
+      "name": "T300",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T3018",
+      "name": "T301",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T3028",
+      "name": "T302",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T3048",
+      "name": "T304",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U7548",
+      "name": "754",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U7538",
+      "name": "753",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U7828",
+      "name": "782",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7548",
+      "name": "T754",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7568",
+      "name": "T756",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U7718",
+      "name": "771",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7158",
+      "name": "T715",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U7508",
+      "name": "750",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T4508",
+      "name": "T450",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T4068",
+      "name": "T406",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T5718",
+      "name": "T571",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U6418",
+      "name": "641",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U6028",
+      "name": "602",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T4069",
+      "name": "T406B",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "S0120",
+      "name": "HLB2",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U2538",
+      "name": "253",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U2548",
+      "name": "254",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U8518",
+      "name": "851",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U2018",
+      "name": "201",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "U1708",
+      "name": "170",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7790",
+      "name": "T779",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7620",
+      "name": "T762",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7640",
+      "name": "T764",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7650",
+      "name": "T765",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7290",
+      "name": "T729",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7280",
+      "name": "T728",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7250",
+      "name": "T725",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7220",
+      "name": "T722",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7210",
+      "name": "T721",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7190",
+      "name": "T719",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7800",
+      "name": "T780",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7810",
+      "name": "T781",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "T7530",
+      "name": "T753",
+      "category": "rapid-bus-kl"
+    },
+    {
+      "id": "30000143",
+      "name": "30000143",
+      "category": "rapid-bus-mrtfeeder"
+    },
+    {
+      "id": "30000044",
+      "name": "30000044",
+      "category": "rapid-bus-mrtfeeder"
+    },
+    {
+      "id": "30000117",
+      "name": "30000117",
+      "category": "rapid-bus-mrtfeeder"
+    },
+    {
+      "id": "30000097",
+      "name": "30000097",
+      "category": "rapid-bus-mrtfeeder"
+    },
+    {
+      "id": "30000127",
+      "name": "30000127",
+      "category": "rapid-bus-mrtfeeder"
+    }
+  ],
+  "frames": 142,
+  "failures": [],
+  "received": [
+    {
+      "route": "B1000",
+      "count": 9,
+      "samples": [
+        {
+          "bus_no": "RAPID729",
+          "route": "B1000",
+          "latitude": 3.065483,
+          "longitude": 101.600737,
+          "dt_gps": "2026-10-18 14:03:24",
+          "dir": null,
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID731",
+          "route": "B1000",
+          "latitude": 3.065473,
+          "longitude": 101.608607,
+          "dt_gps": "2026-10-18 14:03:20",
+          "dir": "01",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "U3000",
+      "count": 14,
+      "samples": [
+        {
+          "bus_no": "VGG9481",
+          "route": "U3000",
+          "latitude": 3.126912,
+          "longitude": 101.734175,
+          "dt_gps": "2026-10-18 14:03:24",
+          "dir": "01",
+          "speed": 15
+        },
+        {
+          "bus_no": "VFH8560",
+          "route": "U3000",
+          "latitude": 3.120877,
+          "longitude": 101.766162,
+          "dt_gps": "2026-10-18 14:03:23",
+          "dir": "02",
+          "speed": 43
+        }
+      ]
+    },
+    {
+      "route": "U3030",
+      "count": 5,
+      "samples": [
+        {
+          "bus_no": "RAPID463",
+          "route": "U3030",
+          "latitude": 3.160172,
+          "longitude": 101.725277,
+          "dt_gps": "2026-10-18 14:03:19",
+          "dir": "02",
+          "speed": 14
+        },
+        {
+          "bus_no": "RAPID462",
+          "route": "U3030",
+          "latitude": 3.136187,
+          "longitude": 101.784118,
+          "dt_gps": "2026-10-18 14:03:27",
+          "dir": "02",
+          "speed": 18
+        }
+      ]
+    },
+    {
+      "route": "U4000",
+      "count": 5,
+      "samples": [
+        {
+          "bus_no": "RAPID481",
+          "route": "U4000",
+          "latitude": 3.063883,
+          "longitude": 101.749507,
+          "dt_gps": "2026-10-18 14:03:23",
+          "dir": "02",
+          "speed": 33
+        },
+        {
+          "bus_no": "RAPID485",
+          "route": "U4000",
+          "latitude": 3.133563,
+          "longitude": 101.714172,
+          "dt_gps": "2026-10-18 14:03:22",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "U4200",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "RAPID692",
+          "route": "U4200",
+          "latitude": 3.123522,
+          "longitude": 101.75116,
+          "dt_gps": "2026-10-18 14:03:22",
+          "dir": "01",
+          "speed": 43
+        },
+        {
+          "bus_no": "RAPID606",
+          "route": "U4200",
+          "latitude": 3.146432,
+          "longitude": 101.759488,
+          "dt_gps": "2026-10-18 13:45:56",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "U4210",
+      "count": 4,
+      "samples": [
+        {
+          "bus_no": "RAPID471",
+          "route": "U4210",
+          "latitude": 3.146363,
+          "longitude": 101.711292,
+          "dt_gps": "2026-10-18 14:03:18",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID495",
+          "route": "U4210",
+          "latitude": 3.14672,
+          "longitude": 101.75961,
+          "dt_gps": "2026-10-18 14:03:26",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "U4500",
+      "count": 6,
+      "samples": [
+        {
+          "bus_no": "VEN3891",
+          "route": "U4500",
+          "latitude": 2.957153,
+          "longitude": 101.79162,
+          "dt_gps": "2026-10-18 13:47:50",
+          "dir": "02",
+          "speed": 6
+        },
+        {
+          "bus_no": "VGF4514",
+          "route": "U4500",
+          "latitude": 3.047798,
+          "longitude": 101.77559,
+          "dt_gps": "2026-10-18 14:03:19",
+          "dir": "02",
+          "speed": 10
+        }
+      ]
+    },
+    {
+      "route": "U5800",
+      "count": 4,
+      "samples": [
+        {
+          "bus_no": "WB4708V",
+          "route": "U5800",
+          "latitude": 3.133623,
+          "longitude": 101.714137,
+          "dt_gps": "2026-10-18 14:03:28",
+          "dir": "02",
+          "speed": 4
+        },
+        {
+          "bus_no": "W2840T",
+          "route": "U5800",
+          "latitude": 3.085018,
+          "longitude": 101.711763,
+          "dt_gps": "2026-10-18 14:03:25",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "U5810",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WB7571F",
+          "route": "U5810",
+          "latitude": 3.059742,
+          "longitude": 101.716793,
+          "dt_gps": "2026-10-18 14:03:24",
+          "dir": "01",
+          "speed": 38
+        },
+        {
+          "bus_no": "WB1755J",
+          "route": "U5810",
+          "latitude": 3.076055,
+          "longitude": 101.711883,
+          "dt_gps": "2026-10-18 14:03:22",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "U5900",
+      "count": 7,
+      "samples": [
+        {
+          "bus_no": "RAPID673",
+          "route": "U5900",
+          "latitude": 3.040933,
+          "longitude": 101.794117,
+          "dt_gps": "2026-10-18 14:03:21",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID443",
+          "route": "U5900",
+          "latitude": 3.050327,
+          "longitude": 101.790413,
+          "dt_gps": "2026-10-18 14:03:30",
+          "dir": "01",
+          "speed": 17
+        }
+      ]
+    },
+    {
+      "route": "U7510",
+      "count": 8,
+      "samples": [
+        {
+          "bus_no": "VGF6505",
+          "route": "U7510",
+          "latitude": 3.030435,
+          "longitude": 101.534795,
+          "dt_gps": "2026-10-18 14:03:29",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "VGJ1970",
+          "route": "U7510",
+          "latitude": 3.084297,
+          "longitude": 101.61792,
+          "dt_gps": "2026-10-18 14:03:30",
+          "dir": "01",
+          "speed": 30
+        }
+      ]
+    },
+    {
+      "route": "U7520",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "W2758T",
+          "route": "U7520",
+          "latitude": 2.990225,
+          "longitude": 101.57213,
+          "dt_gps": "2026-10-18 14:03:30",
+          "dir": "01",
+          "speed": 39
+        },
+        {
+          "bus_no": "W7169Q",
+          "route": "U7520",
+          "latitude": 2.995212,
+          "longitude": 101.575917,
+          "dt_gps": "2026-10-18 14:03:28",
+          "dir": "02",
+          "speed": 1
+        }
+      ]
+    },
+    {
+      "route": "U7700",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "W5174V",
+          "route": "U7700",
+          "latitude": 3.048515,
+          "longitude": 101.60571,
+          "dt_gps": "2026-10-18 14:03:25",
+          "dir": "02",
+          "speed": 1
+        },
+        {
+          "bus_no": "W7442Q",
+          "route": "U7700",
+          "latitude": 3.126438,
+          "longitude": 101.682663,
+          "dt_gps": "2026-10-18 14:03:21",
+          "dir": "02",
+          "speed": 5
+        }
+      ]
+    },
+    {
+      "route": "T3500",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "RAPID599",
+          "route": "T3500",
+          "latitude": 3.12811,
+          "longitude": 101.763117,
+          "dt_gps": "2026-10-18 14:03:30",
+          "dir": "02",
+          "speed": 27
+        },
+        {
+          "bus_no": "RAPID609",
+          "route": "T3500",
+          "latitude": 3.126398,
+          "longitude": 101.769457,
+          "dt_gps": "2026-10-18 14:03:31",
+          "dir": "01",
+          "speed": 32
+        }
+      ]
+    },
+    {
+      "route": "T3510",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "RAPID623",
+          "route": "T3510",
+          "latitude": 3.135195,
+          "longitude": 101.751223,
+          "dt_gps": "2026-10-18 14:03:23",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID669",
+          "route": "T3510",
+          "latitude": 3.111893,
+          "longitude": 101.75822,
+          "dt_gps": "2026-10-18 14:03:30",
+          "dir": "01",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "S0030",
+      "count": 4,
+      "samples": [
+        {
+          "bus_no": "WB4788V",
+          "route": "S0030",
+          "latitude": 2.996007,
+          "longitude": 101.787673,
+          "dt_gps": "2026-10-18 14:03:32",
+          "dir": "01",
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID441",
+          "route": "S0030",
+          "latitude": 2.967956,
+          "longitude": 101.776062,
+          "dt_gps": "2026-10-18 14:03:25",
+          "dir": "02",
+          "speed": 35
+        }
+      ]
+    },
+    {
+      "route": "T3030",
+      "count": 1,
+      "samples": [
+        {
+          "bus_no": "RAPID625",
+          "route": "T3030",
+          "latitude": 3.157518,
+          "longitude": 101.750382,
+          "dt_gps": "2026-10-18 14:03:27",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "U5410",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "RAPID628",
+          "route": "U5410",
+          "latitude": 3.035878,
+          "longitude": 101.664182,
+          "dt_gps": "2026-10-18 14:03:30",
+          "dir": "02",
+          "speed": 39
+        },
+        {
+          "bus_no": "RAPID670",
+          "route": "U5410",
+          "latitude": 2.986513,
+          "longitude": 101.670063,
+          "dt_gps": "2026-10-18 14:03:33",
+          "dir": "01",
+          "speed": 42
+        }
+      ]
+    },
+    {
+      "route": "T6010",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WB824L",
+          "route": "T6010",
+          "latitude": 3.00496,
+          "longitude": 101.598272,
+          "dt_gps": "2026-10-18 14:03:30",
+          "dir": "02",
+          "speed": 16
+        },
+        {
+          "bus_no": "WB7516B",
+          "route": "T6010",
+          "latitude": 2.990655,
+          "longitude": 101.6152,
+          "dt_gps": "2026-10-18 14:03:24",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T6040",
+      "count": 4,
+      "samples": [
+        {
+          "bus_no": "WVP2440",
+          "route": "T6040",
+          "latitude": 3.025565,
+          "longitude": 101.60711,
+          "dt_gps": "2026-10-18 14:03:34",
+          "dir": "02",
+          "speed": 34
+        },
+        {
+          "bus_no": "WB6753J",
+          "route": "T6040",
+          "latitude": 3.06325,
+          "longitude": 101.649115,
+          "dt_gps": "2026-10-18 14:03:32",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T6050",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "WVN7826",
+          "route": "T6050",
+          "latitude": 3.037447,
+          "longitude": 101.748288,
+          "dt_gps": "2026-10-18 14:03:26",
+          "dir": null,
+          "speed": 0
+        },
+        {
+          "bus_no": "WVC6647",
+          "route": "T6050",
+          "latitude": 3.03779,
+          "longitude": 101.7489,
+          "dt_gps": "2026-10-18 14:02:34",
+          "dir": null,
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "S0060",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "RAPID554",
+          "route": "S0060",
+          "latitude": 2.76379,
+          "longitude": 101.684737,
+          "dt_gps": "2026-10-18 14:03:30",
+          "dir": "01",
+          "speed": 59
+        },
+        {
+          "bus_no": "RAPID548",
+          "route": "S0060",
+          "latitude": 2.819328,
+          "longitude": 101.51911,
+          "dt_gps": "2026-10-18 13:58:52",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T6000",
+      "count": 1,
+      "samples": [
+        {
+          "bus_no": "WVC3448",
+          "route": "T6000",
+          "latitude": 3.041202,
+          "longitude": 101.618177,
+          "dt_gps": "2026-10-18 14:03:30",
+          "dir": "01",
+          "speed": 48
+        }
+      ]
+    },
+    {
+      "route": "T6030",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WVB3741",
+          "route": "T6030",
+          "latitude": 3.00009,
+          "longitude": 101.596647,
+          "dt_gps": "2026-10-18 14:03:31",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "WB5418X",
+          "route": "T6030",
+          "latitude": 2.98905,
+          "longitude": 101.594998,
+          "dt_gps": "2026-10-18 14:03:31",
+          "dir": "02",
+          "speed": 30
+        }
+      ]
+    },
+    {
+      "route": "T7740",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WVF1541",
+          "route": "T7740",
+          "latitude": 3.093442,
+          "longitude": 101.585983,
+          "dt_gps": "2026-10-18 14:03:33",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "CDH2346",
+          "route": "T7740",
+          "latitude": 3.095103,
+          "longitude": 101.590183,
+          "dt_gps": "2026-10-18 14:03:20",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T7760",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WUY4968",
+          "route": "T7760",
+          "latitude": 3.057877,
+          "longitude": 101.596975,
+          "dt_gps": "2026-10-18 14:03:30",
+          "dir": "01",
+          "speed": 0
+        },
+        {
+          "bus_no": "CDH7526",
+          "route": "T7760",
+          "latitude": 3.05503,
+          "longitude": 101.5922,
+          "dt_gps": "2026-10-18 14:02:46",
+          "dir": null,
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "S4020",
+      "count": 6,
+      "samples": [
+        {
+          "bus_no": "RAPID430",
+          "route": "S4020",
+          "latitude": 3.071343,
+          "longitude": 101.521755,
+          "dt_gps": "2026-10-18 14:03:30",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID431",
+          "route": "S4020",
+          "latitude": 3.07099,
+          "longitude": 101.556328,
+          "dt_gps": "2026-10-18 14:03:34",
+          "dir": "02",
+          "speed": 22
+        }
+      ]
+    },
+    {
+      "route": "U6510",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WB9037F",
+          "route": "U6510",
+          "latitude": 3.060892,
+          "longitude": 101.659828,
+          "dt_gps": "2026-10-18 14:03:36",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "WVA3045",
+          "route": "U6510",
+          "latitude": 3.07415,
+          "longitude": 101.671283,
+          "dt_gps": "2026-10-18 14:03:35",
+          "dir": "02",
+          "speed": 2
+        }
+      ]
+    },
+    {
+      "route": "U6520",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WB872U",
+          "route": "U6520",
+          "latitude": 3.08937,
+          "longitude": 101.682028,
+          "dt_gps": "2026-10-18 14:03:30",
+          "dir": "01",
+          "speed": 23
+        },
+        {
+          "bus_no": "WB759L",
+          "route": "U6520",
+          "latitude": 3.0619,
+          "longitude": 101.66955,
+          "dt_gps": "2026-10-18 14:03:35",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T5800",
+      "count": 1,
+      "samples": [
+        {
+          "bus_no": "WA2856G",
+          "route": "T5800",
+          "latitude": 3.061882,
+          "longitude": 101.669718,
+          "dt_gps": "2026-10-18 14:03:18",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T5810",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WB3225B",
+          "route": "T5810",
+          "latitude": 3.04577,
+          "longitude": 101.662723,
+          "dt_gps": "2026-10-18 14:03:37",
+          "dir": "02",
+          "speed": 29
+        },
+        {
+          "bus_no": "WB863U",
+          "route": "T5810",
+          "latitude": 3.04578,
+          "longitude": 101.6587,
+          "dt_gps": "2026-10-18 14:03:15",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "U6000",
+      "count": 13,
+      "samples": [
+        {
+          "bus_no": "VEY4750",
+          "route": "U6000",
+          "latitude": 3.141558,
+          "longitude": 101.695422,
+          "dt_gps": "2026-10-18 14:03:33",
+          "dir": "01",
+          "speed": 6
+        },
+        {
+          "bus_no": "VGJ2001",
+          "route": "U6000",
+          "latitude": 2.990565,
+          "longitude": 101.615742,
+          "dt_gps": "2026-10-18 14:03:33",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "U6400",
+      "count": 5,
+      "samples": [
+        {
+          "bus_no": "VGJ8315",
+          "route": "U6400",
+          "latitude": 3.074833,
+          "longitude": 101.644147,
+          "dt_gps": "2026-10-18 14:03:31",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "VGH1474",
+          "route": "U6400",
+          "latitude": 3.099282,
+          "longitude": 101.676032,
+          "dt_gps": "2026-10-18 14:03:35",
+          "dir": "02",
+          "speed": 8
+        }
+      ]
+    },
+    {
+      "route": "U6500",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WB3819K",
+          "route": "U6500",
+          "latitude": 3.13356,
+          "longitude": 101.687658,
+          "dt_gps": "2026-10-18 14:03:36",
+          "dir": "02",
+          "speed": 11
+        },
+        {
+          "bus_no": "WB1917U",
+          "route": "U6500",
+          "latitude": 3.142128,
+          "longitude": 101.695442,
+          "dt_gps": "2026-10-18 14:03:32",
+          "dir": "01",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T6400",
+      "count": 4,
+      "samples": [
+        {
+          "bus_no": "WB5608Q",
+          "route": "T6400",
+          "latitude": 3.103745,
+          "longitude": 101.645247,
+          "dt_gps": "2026-10-18 14:03:32",
+          "dir": "01",
+          "speed": 0
+        },
+        {
+          "bus_no": "WB2148J",
+          "route": "T6400",
+          "latitude": 3.103782,
+          "longitude": 101.645115,
+          "dt_gps": "2026-10-18 14:03:32",
+          "dir": "01",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "U7830",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "W7743T",
+          "route": "U7830",
+          "latitude": 3.112933,
+          "longitude": 101.604175,
+          "dt_gps": "2026-10-18 13:49:07",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "W4677V",
+          "route": "U7830",
+          "latitude": 3.10805,
+          "longitude": 101.596323,
+          "dt_gps": "2026-10-18 14:03:38",
+          "dir": "02",
+          "speed": 13
+        }
+      ]
+    },
+    {
+      "route": "T7820",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "RAPID679",
+          "route": "T7820",
+          "latitude": 3.112468,
+          "longitude": 101.590179,
+          "dt_gps": "2026-10-18 14:03:35",
+          "dir": "02",
+          "speed": 16
+        },
+        {
+          "bus_no": "WVF5486",
+          "route": "T7820",
+          "latitude": 3.121597,
+          "longitude": 101.588668,
+          "dt_gps": "2026-10-18 14:03:36",
+          "dir": "02",
+          "speed": 39
+        }
+      ]
+    },
+    {
+      "route": "T7900",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "WVA4806",
+          "route": "T7900",
+          "latitude": 3.109673,
+          "longitude": 101.623188,
+          "dt_gps": "2026-10-18 14:03:32",
+          "dir": "02",
+          "speed": 8
+        },
+        {
+          "bus_no": "WVE5708",
+          "route": "T7900",
+          "latitude": 3.104843,
+          "longitude": 101.623188,
+          "dt_gps": "2026-10-18 14:03:36",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T7860",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WVD4738",
+          "route": "T7860",
+          "latitude": 3.104263,
+          "longitude": 101.638282,
+          "dt_gps": "2026-10-18 14:03:33",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "WUY4084",
+          "route": "T7860",
+          "latitude": 3.11854,
+          "longitude": 101.631465,
+          "dt_gps": "2026-10-18 14:03:32",
+          "dir": "01",
+          "speed": 3
+        }
+      ]
+    },
+    {
+      "route": "T7870",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WVG3324",
+          "route": "T7870",
+          "latitude": 3.112942,
+          "longitude": 101.63404,
+          "dt_gps": "2026-10-18 14:03:35",
+          "dir": "02",
+          "speed": 22
+        },
+        {
+          "bus_no": "WVD4789",
+          "route": "T7870",
+          "latitude": 3.104088,
+          "longitude": 101.638235,
+          "dt_gps": "2026-10-18 14:00:36",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T7880",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WVD3294",
+          "route": "T7880",
+          "latitude": 3.114223,
+          "longitude": 101.662322,
+          "dt_gps": "2026-10-18 14:03:35",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "WVH9724",
+          "route": "T7880",
+          "latitude": 3.117745,
+          "longitude": 101.66472,
+          "dt_gps": "2026-10-18 14:03:35",
+          "dir": "02",
+          "speed": 41
+        }
+      ]
+    },
+    {
+      "route": "T7890",
+      "count": 4,
+      "samples": [
+        {
+          "bus_no": "WB8354K",
+          "route": "T7890",
+          "latitude": 3.114247,
+          "longitude": 101.662188,
+          "dt_gps": "2026-10-18 13:58:18",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "VMP6096",
+          "route": "T7890",
+          "latitude": 3.10843,
+          "longitude": 101.6662,
+          "dt_gps": "2026-10-18 14:03:29",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T7910",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WVD4166",
+          "route": "T7910",
+          "latitude": 3.117282,
+          "longitude": 101.667203,
+          "dt_gps": "2026-10-18 14:03:42",
+          "dir": "02",
+          "speed": 30
+        },
+        {
+          "bus_no": "WVD4692",
+          "route": "T7910",
+          "latitude": 3.115638,
+          "longitude": 101.668267,
+          "dt_gps": "2026-10-18 14:02:21",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "P0010",
+      "count": 6,
+      "samples": [
+        {
+          "bus_no": "RAPID476",
+          "route": "P0010",
+          "latitude": 3.099858,
+          "longitude": 101.646725,
+          "dt_gps": "2026-10-18 14:03:42",
+          "dir": "01",
+          "speed": 23
+        },
+        {
+          "bus_no": "RAPID472",
+          "route": "P0010",
+          "latitude": 3.10928,
+          "longitude": 101.652878,
+          "dt_gps": "2026-10-18 14:03:35",
+          "dir": "01",
+          "speed": 39
+        }
+      ]
+    },
+    {
+      "route": "P0020",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "RAPID492",
+          "route": "P0020",
+          "latitude": 3.103798,
+          "longitude": 101.645282,
+          "dt_gps": "2026-10-18 14:03:38",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID491",
+          "route": "P0020",
+          "latitude": 3.118963,
+          "longitude": 101.635255,
+          "dt_gps": "2026-10-18 14:03:41",
+          "dir": "01",
+          "speed": 19
+        }
+      ]
+    },
+    {
+      "route": "P0030",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "RAPID479",
+          "route": "P0030",
+          "latitude": 3.110757,
+          "longitude": 101.61317,
+          "dt_gps": "2026-10-18 13:53:23",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID477",
+          "route": "P0030",
+          "latitude": 3.110792,
+          "longitude": 101.613067,
+          "dt_gps": "2026-10-18 13:35:45",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "P0040",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "RAPID514",
+          "route": "P0040",
+          "latitude": 3.110877,
+          "longitude": 101.612938,
+          "dt_gps": "2026-10-18 13:48:27",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID522",
+          "route": "P0040",
+          "latitude": 3.114955,
+          "longitude": 101.62145,
+          "dt_gps": "2026-10-18 14:03:43",
+          "dir": "01",
+          "speed": 29
+        }
+      ]
+    },
+    {
+      "route": "T8500",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "WA7507M",
+          "route": "T8500",
+          "latitude": 3.127962,
+          "longitude": 101.678983,
+          "dt_gps": "2026-10-18 14:03:36",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "WB4408N",
+          "route": "T8500",
+          "latitude": 3.14249,
+          "longitude": 101.6661,
+          "dt_gps": "2026-10-18 14:03:24",
+          "dir": "02",
+          "speed": 26
+        }
+      ]
+    },
+    {
+      "route": "S4050",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "WB7413B",
+          "route": "S4050",
+          "latitude": 3.087602,
+          "longitude": 101.552783,
+          "dt_gps": "2026-10-18 14:02:05",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID436",
+          "route": "S4050",
+          "latitude": 3.084902,
+          "longitude": 101.549107,
+          "dt_gps": "2026-10-18 13:51:20",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "S1030",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WVE5137",
+          "route": "S1030",
+          "latitude": 3.14058,
+          "longitude": 101.76933,
+          "dt_gps": "2026-10-18 14:03:38",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "WVN5622",
+          "route": "S1030",
+          "latitude": 3.144685,
+          "longitude": 101.763302,
+          "dt_gps": "2026-10-18 14:03:43",
+          "dir": "02",
+          "speed": 10
+        }
+      ]
+    },
+    {
+      "route": "S1040",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WVL649",
+          "route": "S1040",
+          "latitude": 3.140437,
+          "longitude": 101.769268,
+          "dt_gps": "2026-10-18 14:03:01",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "WVP2518",
+          "route": "S1040",
+          "latitude": 3.143473,
+          "longitude": 101.772897,
+          "dt_gps": "2026-10-18 14:03:46",
+          "dir": "02",
+          "speed": 40
+        }
+      ]
+    },
+    {
+      "route": "S1050",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "RAPID465",
+          "route": "S1050",
+          "latitude": 3.135688,
+          "longitude": 101.7514,
+          "dt_gps": "2026-10-18 14:03:45",
+          "dir": "01",
+          "speed": 26
+        },
+        {
+          "bus_no": "RAPID466",
+          "route": "S1050",
+          "latitude": 3.113614,
+          "longitude": 101.76487,
+          "dt_gps": "2026-10-18 14:03:38",
+          "dir": "02",
+          "speed": 38
+        }
+      ]
+    },
+    {
+      "route": "S2060",
+      "count": 1,
+      "samples": [
+        {
+          "bus_no": "RAPID557",
+          "route": "S2060",
+          "latitude": 2.812083,
+          "longitude": 101.496612,
+          "dt_gps": "2026-10-18 14:03:45",
+          "dir": "01",
+          "speed": 27
+        }
+      ]
+    },
+    {
+      "route": "S1060",
+      "count": 1,
+      "samples": [
+        {
+          "bus_no": "RAPID458",
+          "route": "S1060",
+          "latitude": 2.86898,
+          "longitude": 101.814942,
+          "dt_gps": "2026-10-18 14:03:40",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "S1070",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WB8625F",
+          "route": "S1070",
+          "latitude": 3.051555,
+          "longitude": 101.754915,
+          "dt_gps": "2026-10-18 14:03:25",
+          "dir": "01",
+          "speed": 31
+        },
+        {
+          "bus_no": "RAPID546",
+          "route": "S1070",
+          "latitude": 3.044483,
+          "longitude": 101.757152,
+          "dt_gps": "2026-10-18 14:03:47",
+          "dir": "02",
+          "speed": 47
+        }
+      ]
+    },
+    {
+      "route": "U7720",
+      "count": 7,
+      "samples": [
+        {
+          "bus_no": "VFE4091",
+          "route": "U7720",
+          "latitude": 3.177335,
+          "longitude": 101.536393,
+          "dt_gps": "2026-10-18 14:03:42",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "VFE4087",
+          "route": "U7720",
+          "latitude": 3.177413,
+          "longitude": 101.536237,
+          "dt_gps": "2026-10-18 14:03:41",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "U7800",
+      "count": 7,
+      "samples": [
+        {
+          "bus_no": "WVH9594",
+          "route": "U7800",
+          "latitude": 3.1098,
+          "longitude": 101.653,
+          "dt_gps": "2026-10-18 14:03:34",
+          "dir": "01",
+          "speed": 5
+        },
+        {
+          "bus_no": "WVH1852",
+          "route": "U7800",
+          "latitude": 3.11655,
+          "longitude": 101.6215,
+          "dt_gps": "2026-10-18 14:03:44",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "U2000",
+      "count": 6,
+      "samples": [
+        {
+          "bus_no": "WUX6797",
+          "route": "U2000",
+          "latitude": 3.246083,
+          "longitude": 101.727225,
+          "dt_gps": "2026-10-18 14:03:42",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "WC8757B",
+          "route": "U2000",
+          "latitude": 3.19362,
+          "longitude": 101.7055,
+          "dt_gps": "2026-10-18 14:03:20",
+          "dir": "02",
+          "speed": 11
+        }
+      ]
+    },
+    {
+      "route": "U2200",
+      "count": 5,
+      "samples": [
+        {
+          "bus_no": "WUU6043",
+          "route": "U2200",
+          "latitude": 3.195678,
+          "longitude": 101.763403,
+          "dt_gps": "2026-10-18 14:03:45",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "WVC6407",
+          "route": "U2200",
+          "latitude": 3.168248,
+          "longitude": 101.697335,
+          "dt_gps": "2026-10-18 14:03:49",
+          "dir": "01",
+          "speed": 27
+        }
+      ]
+    },
+    {
+      "route": "U2220",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WUW8429",
+          "route": "U2220",
+          "latitude": 3.227633,
+          "longitude": 101.745278,
+          "dt_gps": "2026-10-18 14:03:47",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "WUY9497",
+          "route": "U2220",
+          "latitude": 3.208305,
+          "longitude": 101.75272,
+          "dt_gps": "2026-10-18 14:03:45",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "U2500",
+      "count": 12,
+      "samples": [
+        {
+          "bus_no": "RAPID519",
+          "route": "U2500",
+          "latitude": 3.204043,
+          "longitude": 101.723005,
+          "dt_gps": "2026-10-18 14:03:46",
+          "dir": "02",
+          "speed": 60
+        },
+        {
+          "bus_no": "RAPID518",
+          "route": "U2500",
+          "latitude": 3.192907,
+          "longitude": 101.70958,
+          "dt_gps": "2026-10-18 14:03:42",
+          "dir": "01",
+          "speed": 36
+        }
+      ]
+    },
+    {
+      "route": "U2510",
+      "count": 5,
+      "samples": [
+        {
+          "bus_no": "RAPID626",
+          "route": "U2510",
+          "latitude": 3.189855,
+          "longitude": 101.756735,
+          "dt_gps": "2026-10-18 14:03:50",
+          "dir": "02",
+          "speed": 24
+        },
+        {
+          "bus_no": "RAPID641",
+          "route": "U2510",
+          "latitude": 3.183503,
+          "longitude": 101.702223,
+          "dt_gps": "2026-10-18 14:03:50",
+          "dir": "02",
+          "speed": 15
+        }
+      ]
+    },
+    {
+      "route": "T2000",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WUU6736",
+          "route": "T2000",
+          "latitude": 3.226575,
+          "longitude": 101.72722,
+          "dt_gps": "2026-10-18 14:03:50",
+          "dir": "02",
+          "speed": 16
+        },
+        {
+          "bus_no": "WVA5879",
+          "route": "T2000",
+          "latitude": 3.229788,
+          "longitude": 101.724032,
+          "dt_gps": "2026-10-18 14:03:47",
+          "dir": "02",
+          "speed": 27
+        }
+      ]
+    },
+    {
+      "route": "T2010",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "RAPID629",
+          "route": "T2010",
+          "latitude": 3.226692,
+          "longitude": 101.726765,
+          "dt_gps": "2026-10-18 14:03:51",
+          "dir": "01",
+          "speed": 25
+        },
+        {
+          "bus_no": "RAPID665",
+          "route": "T2010",
+          "latitude": 3.251777,
+          "longitude": 101.684587,
+          "dt_gps": "2026-10-18 14:03:43",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T2020",
+      "count": 1,
+      "samples": [
+        {
+          "bus_no": "PMQ3578",
+          "route": "T2020",
+          "latitude": 3.219365,
+          "longitude": 101.721775,
+          "dt_gps": "2026-10-18 14:03:44",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T2220",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "WVA5842",
+          "route": "T2220",
+          "latitude": 3.21037,
+          "longitude": 101.7793,
+          "dt_gps": "2026-10-18 14:03:34",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "WVC3485",
+          "route": "T2220",
+          "latitude": 3.198627,
+          "longitude": 101.737997,
+          "dt_gps": "2026-10-18 14:03:49",
+          "dir": "01",
+          "speed": 9
+        }
+      ]
+    },
+    {
+      "route": "T2500",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "RAPID662",
+          "route": "T2500",
+          "latitude": 3.208093,
+          "longitude": 101.728492,
+          "dt_gps": "2026-10-18 14:03:46",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID632",
+          "route": "T2500",
+          "latitude": 3.203835,
+          "longitude": 101.733782,
+          "dt_gps": "2026-10-18 14:03:46",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T2510",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WVH7650",
+          "route": "T2510",
+          "latitude": 3.199007,
+          "longitude": 101.73763,
+          "dt_gps": "2026-10-18 14:03:52",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "WVH7696",
+          "route": "T2510",
+          "latitude": 3.200118,
+          "longitude": 101.742438,
+          "dt_gps": "2026-10-18 14:03:42",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T2230",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "WVC6453",
+          "route": "T2230",
+          "latitude": 3.174653,
+          "longitude": 101.738282,
+          "dt_gps": "2026-10-18 14:03:49",
+          "dir": "02",
+          "speed": 15
+        },
+        {
+          "bus_no": "WVD2187",
+          "route": "T2230",
+          "latitude": 3.17539,
+          "longitude": 101.735915,
+          "dt_gps": "2026-10-18 13:56:37",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T2240",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "RAPID663",
+          "route": "T2240",
+          "latitude": 3.165262,
+          "longitude": 101.731545,
+          "dt_gps": "2026-10-18 14:03:49",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID528",
+          "route": "T2240",
+          "latitude": 3.165658,
+          "longitude": 101.735112,
+          "dt_gps": "2026-10-18 14:03:51",
+          "dir": "02",
+          "speed": 39
+        }
+      ]
+    },
+    {
+      "route": "U1710",
+      "count": 6,
+      "samples": [
+        {
+          "bus_no": "WB1120K",
+          "route": "U1710",
+          "latitude": 3.23314,
+          "longitude": 101.692597,
+          "dt_gps": "2026-10-18 14:03:50",
+          "dir": "02",
+          "speed": 16
+        },
+        {
+          "bus_no": "WVN5576",
+          "route": "U1710",
+          "latitude": 3.16297,
+          "longitude": 101.6983,
+          "dt_gps": "2026-10-18 14:03:47",
+          "dir": "02",
+          "speed": 25
+        }
+      ]
+    },
+    {
+      "route": "U1730",
+      "count": 9,
+      "samples": [
+        {
+          "bus_no": "W479T",
+          "route": "U1730",
+          "latitude": 3.178685,
+          "longitude": 101.685193,
+          "dt_gps": "2026-10-18 14:03:54",
+          "dir": "01",
+          "speed": 21
+        },
+        {
+          "bus_no": "W7952S",
+          "route": "U1730",
+          "latitude": 3.209653,
+          "longitude": 101.68107,
+          "dt_gps": "2026-10-18 14:03:53",
+          "dir": "01",
+          "speed": 38
+        }
+      ]
+    },
+    {
+      "route": "U1800",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "WVC6416",
+          "route": "U1800",
+          "latitude": 3.194095,
+          "longitude": 101.694078,
+          "dt_gps": "2026-10-18 14:03:50",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "WUX5843",
+          "route": "U1800",
+          "latitude": 3.160728,
+          "longitude": 101.695285,
+          "dt_gps": "2026-10-18 14:03:47",
+          "dir": "01",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "U1900",
+      "count": 7,
+      "samples": [
+        {
+          "bus_no": "WVA4269",
+          "route": "U1900",
+          "latitude": 3.163323,
+          "longitude": 101.647527,
+          "dt_gps": "2026-10-18 14:03:54",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "WUX5618",
+          "route": "U1900",
+          "latitude": 3.18682,
+          "longitude": 101.662093,
+          "dt_gps": "2026-10-18 14:03:52",
+          "dir": "01",
+          "speed": 29
+        }
+      ]
+    },
+    {
+      "route": "U2020",
+      "count": 7,
+      "samples": [
+        {
+          "bus_no": "WVG2361",
+          "route": "U2020",
+          "latitude": 3.249868,
+          "longitude": 101.68375,
+          "dt_gps": "2026-10-18 14:03:56",
+          "dir": "02",
+          "speed": 14
+        },
+        {
+          "bus_no": "WUW8434",
+          "route": "U2020",
+          "latitude": 3.251577,
+          "longitude": 101.684677,
+          "dt_gps": "2026-10-18 14:03:49",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "U3020",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "WUW1702",
+          "route": "U3020",
+          "latitude": 3.167408,
+          "longitude": 101.698702,
+          "dt_gps": "2026-10-18 14:03:53",
+          "dir": "02",
+          "speed": 26
+        },
+        {
+          "bus_no": "WUU6742",
+          "route": "U3020",
+          "latitude": 3.172173,
+          "longitude": 101.695652,
+          "dt_gps": "2026-10-18 14:03:53",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "U8210",
+      "count": 7,
+      "samples": [
+        {
+          "bus_no": "WUW1664",
+          "route": "U8210",
+          "latitude": 3.10555,
+          "longitude": 101.66608,
+          "dt_gps": "2026-10-18 14:03:56",
+          "dir": "01",
+          "speed": 17
+        },
+        {
+          "bus_no": "WVD4028",
+          "route": "U8210",
+          "latitude": 3.137713,
+          "longitude": 101.690843,
+          "dt_gps": "2026-10-18 14:03:50",
+          "dir": null,
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "U8220",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WVC3917",
+          "route": "U8220",
+          "latitude": 3.120867,
+          "longitude": 101.677235,
+          "dt_gps": "2026-10-18 14:03:51",
+          "dir": "02",
+          "speed": 36
+        },
+        {
+          "bus_no": "WVD4758",
+          "route": "U8220",
+          "latitude": 3.12802,
+          "longitude": 101.679023,
+          "dt_gps": "2026-10-18 14:03:55",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "P0050",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "RAPID422",
+          "route": "P0050",
+          "latitude": 3.116405,
+          "longitude": 101.621845,
+          "dt_gps": "2026-10-18 14:03:48",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID601",
+          "route": "P0050",
+          "latitude": 3.151508,
+          "longitude": 101.61331,
+          "dt_gps": "2026-10-18 14:03:51",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "P0060",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "RAPID459",
+          "route": "P0060",
+          "latitude": 3.167137,
+          "longitude": 101.607058,
+          "dt_gps": "2026-10-18 14:03:56",
+          "dir": "02",
+          "speed": 39
+        },
+        {
+          "bus_no": "RAPID489",
+          "route": "P0060",
+          "latitude": 3.151562,
+          "longitude": 101.613345,
+          "dt_gps": "2026-10-18 13:36:46",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "S0070",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "WB5661Q",
+          "route": "S0070",
+          "latitude": 3.230995,
+          "longitude": 101.723928,
+          "dt_gps": "2026-10-18 14:03:47",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "WB2675Q",
+          "route": "S0070",
+          "latitude": 3.261528,
+          "longitude": 101.672777,
+          "dt_gps": "2026-10-18 14:01:25",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "S1140",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "WVJ1031",
+          "route": "S1140",
+          "latitude": 3.112085,
+          "longitude": 101.73968,
+          "dt_gps": "2026-10-18 13:53:53",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "WVH7894",
+          "route": "S1140",
+          "latitude": 3.119045,
+          "longitude": 101.7412,
+          "dt_gps": "2026-10-18 14:03:56",
+          "dir": "02",
+          "speed": 15
+        }
+      ]
+    },
+    {
+      "route": "S1170",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "RAPID589",
+          "route": "S1170",
+          "latitude": 2.962582,
+          "longitude": 101.757257,
+          "dt_gps": "2026-10-18 14:03:53",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "WB792L",
+          "route": "S1170",
+          "latitude": 2.956943,
+          "longitude": 101.791835,
+          "dt_gps": "2026-10-18 13:46:40",
+          "dir": "02",
+          "speed": 4
+        }
+      ]
+    },
+    {
+      "route": "S4070",
+      "count": 4,
+      "samples": [
+        {
+          "bus_no": "PKY1274",
+          "route": "S4070",
+          "latitude": 3.069375,
+          "longitude": 101.556107,
+          "dt_gps": "2026-10-18 14:03:54",
+          "dir": "02",
+          "speed": 12
+        },
+        {
+          "bus_no": "RAPID532",
+          "route": "S4070",
+          "latitude": 3.07574,
+          "longitude": 101.560074,
+          "dt_gps": "2026-10-18 14:03:44",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "S4080",
+      "count": 4,
+      "samples": [
+        {
+          "bus_no": "RAPID533",
+          "route": "S4080",
+          "latitude": 3.02671,
+          "longitude": 101.565357,
+          "dt_gps": "2026-10-18 14:03:53",
+          "dir": "02",
+          "speed": 48
+        },
+        {
+          "bus_no": "WVD2380",
+          "route": "S4080",
+          "latitude": 3.023013,
+          "longitude": 101.572383,
+          "dt_gps": "2026-10-18 13:58:36",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "S0040",
+      "count": 4,
+      "samples": [
+        {
+          "bus_no": "RAPID565",
+          "route": "S0040",
+          "latitude": 3.21032,
+          "longitude": 101.77925,
+          "dt_gps": "2026-10-18 14:03:49",
+          "dir": "01",
+          "speed": 0
+        },
+        {
+          "bus_no": "WVH1469",
+          "route": "S0040",
+          "latitude": 3.207167,
+          "longitude": 101.781798,
+          "dt_gps": "2026-10-18 14:03:37",
+          "dir": "02",
+          "speed": 14
+        }
+      ]
+    },
+    {
+      "route": "S1190",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "WB5708Q",
+          "route": "S1190",
+          "latitude": 3.30169,
+          "longitude": 101.582103,
+          "dt_gps": "2026-10-18 14:03:56",
+          "dir": "02",
+          "speed": 24
+        },
+        {
+          "bus_no": "WB6374S",
+          "route": "S1190",
+          "latitude": 3.302177,
+          "longitude": 101.59683,
+          "dt_gps": "2026-10-18 13:55:07",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "S6060",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "VGH4674",
+          "route": "S6060",
+          "latitude": 3.06181,
+          "longitude": 101.6699,
+          "dt_gps": "2026-10-18 14:03:42",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "VGJ8310",
+          "route": "S6060",
+          "latitude": 3.058305,
+          "longitude": 101.659263,
+          "dt_gps": "2026-10-18 14:04:00",
+          "dir": "02",
+          "speed": 36
+        }
+      ]
+    },
+    {
+      "route": "S1390",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WB7246P",
+          "route": "S1390",
+          "latitude": 3.298292,
+          "longitude": 101.470697,
+          "dt_gps": "2026-10-18 14:03:56",
+          "dir": "02",
+          "speed": 23
+        },
+        {
+          "bus_no": "WB7358P",
+          "route": "S1390",
+          "latitude": 3.220802,
+          "longitude": 101.583737,
+          "dt_gps": "2026-10-18 14:03:50",
+          "dir": "01",
+          "speed": 23
+        }
+      ]
+    },
+    {
+      "route": "S1490",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "WB6461M",
+          "route": "S1490",
+          "latitude": 3.208215,
+          "longitude": 101.615013,
+          "dt_gps": "2026-10-18 14:03:58",
+          "dir": "02",
+          "speed": 29
+        },
+        {
+          "bus_no": "WB5638Q",
+          "route": "S1490",
+          "latitude": 3.207173,
+          "longitude": 101.607048,
+          "dt_gps": "2026-10-18 14:03:54",
+          "dir": "02",
+          "speed": 24
+        }
+      ]
+    },
+    {
+      "route": "P1010",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "RAPID549",
+          "route": "P1010",
+          "latitude": 2.936048,
+          "longitude": 101.692625,
+          "dt_gps": "2026-10-18 14:03:59",
+          "dir": "02",
+          "speed": 22
+        },
+        {
+          "bus_no": "RAPID540",
+          "route": "P1010",
+          "latitude": 2.949582,
+          "longitude": 101.710267,
+          "dt_gps": "2026-10-18 14:03:52",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "P1020",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "RAPID499",
+          "route": "P1020",
+          "latitude": 2.951237,
+          "longitude": 101.730813,
+          "dt_gps": "2026-10-18 14:04:00",
+          "dir": null,
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID486",
+          "route": "P1020",
+          "latitude": 2.955472,
+          "longitude": 101.674293,
+          "dt_gps": "2026-10-18 14:03:59",
+          "dir": "02",
+          "speed": 40
+        }
+      ]
+    },
+    {
+      "route": "P1030",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "RAPID560",
+          "route": "P1030",
+          "latitude": 2.95017,
+          "longitude": 101.727942,
+          "dt_gps": "2026-10-18 14:03:54",
+          "dir": "02",
+          "speed": 35
+        },
+        {
+          "bus_no": "RAPID545",
+          "route": "P1030",
+          "latitude": 2.951242,
+          "longitude": 101.730925,
+          "dt_gps": "2026-10-18 13:51:44",
+          "dir": null,
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "P1060",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "RAPID500",
+          "route": "P1060",
+          "latitude": 2.914363,
+          "longitude": 101.687072,
+          "dt_gps": "2026-10-18 14:03:55",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID496",
+          "route": "P1060",
+          "latitude": 2.912408,
+          "longitude": 101.687553,
+          "dt_gps": "2026-10-18 14:03:55",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "P1080",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "RAPID558",
+          "route": "P1080",
+          "latitude": 2.932602,
+          "longitude": 101.672075,
+          "dt_gps": "2026-10-18 14:04:00",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID559",
+          "route": "P1080",
+          "latitude": 2.942457,
+          "longitude": 101.672913,
+          "dt_gps": "2026-10-18 14:04:02",
+          "dir": "02",
+          "speed": 19
+        }
+      ]
+    },
+    {
+      "route": "U1510",
+      "count": 4,
+      "samples": [
+        {
+          "bus_no": "WVH6234",
+          "route": "U1510",
+          "latitude": 3.142727,
+          "longitude": 101.695743,
+          "dt_gps": "2026-10-18 14:04:01",
+          "dir": "01",
+          "speed": 0
+        },
+        {
+          "bus_no": "WB6417S",
+          "route": "U1510",
+          "latitude": 3.170588,
+          "longitude": 101.694128,
+          "dt_gps": "2026-10-18 14:04:03",
+          "dir": "01",
+          "speed": 11
+        }
+      ]
+    },
+    {
+      "route": "T3008",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "JNU4976",
+          "route": "T3008",
+          "latitude": 3.1568,
+          "longitude": 101.766535,
+          "dt_gps": "2026-10-18 14:04:04",
+          "dir": "01",
+          "speed": 11
+        },
+        {
+          "bus_no": "JSD7544",
+          "route": "T3008",
+          "latitude": 3.147867,
+          "longitude": 101.776863,
+          "dt_gps": "2026-10-18 14:04:01",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T3018",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "JXL5685",
+          "route": "T3018",
+          "latitude": 3.156467,
+          "longitude": 101.752142,
+          "dt_gps": "2026-10-18 14:03:58",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "JXK3450",
+          "route": "T3018",
+          "latitude": 3.13289,
+          "longitude": 101.783333,
+          "dt_gps": "2026-10-18 14:04:03",
+          "dir": "00",
+          "speed": 17
+        }
+      ]
+    },
+    {
+      "route": "T3028",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "JNS8559",
+          "route": "T3028",
+          "latitude": 3.149713,
+          "longitude": 101.791377,
+          "dt_gps": "2026-10-18 14:04:02",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "JQB7201",
+          "route": "T3028",
+          "latitude": 3.14912,
+          "longitude": 101.7632,
+          "dt_gps": "2026-10-18 14:03:56",
+          "dir": "01",
+          "speed": 37
+        }
+      ]
+    },
+    {
+      "route": "T3048",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "JSN7064",
+          "route": "T3048",
+          "latitude": 3.14748,
+          "longitude": 101.76626,
+          "dt_gps": "2026-10-18 14:03:59",
+          "dir": "01",
+          "speed": 17
+        },
+        {
+          "bus_no": "JMV8468",
+          "route": "T3048",
+          "latitude": 3.148017,
+          "longitude": 101.776938,
+          "dt_gps": "2026-10-18 14:03:56",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "U7548",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "JPV7562",
+          "route": "U7548",
+          "latitude": 3.08513,
+          "longitude": 101.5494,
+          "dt_gps": "2026-10-18 13:55:22",
+          "dir": "02",
+          "speed": 12
+        },
+        {
+          "bus_no": "JNP7608",
+          "route": "U7548",
+          "latitude": 3.13939,
+          "longitude": 101.4957,
+          "dt_gps": "2026-10-18 14:04:03",
+          "dir": "02",
+          "speed": 47
+        }
+      ]
+    },
+    {
+      "route": "U7538",
+      "count": 4,
+      "samples": [
+        {
+          "bus_no": "JNB4852",
+          "route": "U7538",
+          "latitude": 3.07167,
+          "longitude": 101.4528,
+          "dt_gps": "2026-10-18 14:04:04",
+          "dir": "02",
+          "speed": 43
+        },
+        {
+          "bus_no": "JQT6821",
+          "route": "U7538",
+          "latitude": 3.0726,
+          "longitude": 101.5218,
+          "dt_gps": "2026-10-18 14:04:04",
+          "dir": null,
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "U7828",
+      "count": 1,
+      "samples": [
+        {
+          "bus_no": "JXK3448",
+          "route": "U7828",
+          "latitude": 3.088275,
+          "longitude": 101.653822,
+          "dt_gps": "2026-10-18 14:03:58",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T7548",
+      "count": 1,
+      "samples": [
+        {
+          "bus_no": "JSK7322",
+          "route": "T7548",
+          "latitude": 3.07018,
+          "longitude": 101.506615,
+          "dt_gps": "2026-10-18 14:04:07",
+          "dir": "01",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T7568",
+      "count": 1,
+      "samples": [
+        {
+          "bus_no": "JPY4875",
+          "route": "T7568",
+          "latitude": 3.072553,
+          "longitude": 101.521713,
+          "dt_gps": "2026-10-18 14:04:06",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "U7718",
+      "count": 5,
+      "samples": [
+        {
+          "bus_no": "JPV7580",
+          "route": "U7718",
+          "latitude": 3.049227,
+          "longitude": 101.60168,
+          "dt_gps": "2026-10-18 14:04:05",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "JSD7561",
+          "route": "U7718",
+          "latitude": 3.056812,
+          "longitude": 101.591852,
+          "dt_gps": "2026-10-18 14:04:08",
+          "dir": "02",
+          "speed": 22
+        }
+      ]
+    },
+    {
+      "route": "T7158",
+      "count": 1,
+      "samples": [
+        {
+          "bus_no": "JXK448",
+          "route": "T7158",
+          "latitude": 3.24658,
+          "longitude": 101.4281,
+          "dt_gps": "2026-10-18 13:58:47",
+          "dir": null,
+          "speed": 11
+        }
+      ]
+    },
+    {
+      "route": "U7508",
+      "count": 8,
+      "samples": [
+        {
+          "bus_no": "JSD7560",
+          "route": "U7508",
+          "latitude": 3.03723,
+          "longitude": 101.5518,
+          "dt_gps": "2026-10-18 14:03:12",
+          "dir": null,
+          "speed": 0
+        },
+        {
+          "bus_no": "JSD7540",
+          "route": "U7508",
+          "latitude": 3.069367,
+          "longitude": 101.517048,
+          "dt_gps": "2026-10-18 14:04:02",
+          "dir": "01",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T4508",
+      "count": 5,
+      "samples": [
+        {
+          "bus_no": "JXK439",
+          "route": "T4508",
+          "latitude": 2.889395,
+          "longitude": 101.870468,
+          "dt_gps": "2026-10-18 14:04:08",
+          "dir": "02",
+          "speed": 40
+        },
+        {
+          "bus_no": "JXL5684",
+          "route": "T4508",
+          "latitude": 2.950825,
+          "longitude": 101.84544,
+          "dt_gps": "2026-10-18 14:04:07",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T4068",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "JRU2145",
+          "route": "T4068",
+          "latitude": 3.185852,
+          "longitude": 101.854232,
+          "dt_gps": "2026-10-18 14:04:07",
+          "dir": "01",
+          "speed": 33
+        },
+        {
+          "bus_no": "JXM2841",
+          "route": "T4068",
+          "latitude": 3.06055,
+          "longitude": 101.771858,
+          "dt_gps": "2026-10-18 14:04:03",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T5718",
+      "count": 1,
+      "samples": [
+        {
+          "bus_no": "JXK3461",
+          "route": "T5718",
+          "latitude": 3.00877,
+          "longitude": 101.7239,
+          "dt_gps": "2026-10-18 14:03:58",
+          "dir": "02",
+          "speed": 29
+        }
+      ]
+    },
+    {
+      "route": "U6418",
+      "count": 4,
+      "samples": [
+        {
+          "bus_no": "JXK3452",
+          "route": "U6418",
+          "latitude": 3.084525,
+          "longitude": 101.586612,
+          "dt_gps": "2026-10-18 14:04:07",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "JXL5687",
+          "route": "U6418",
+          "latitude": 3.087918,
+          "longitude": 101.674053,
+          "dt_gps": "2026-10-18 14:04:07",
+          "dir": "02",
+          "speed": 44
+        }
+      ]
+    },
+    {
+      "route": "U6028",
+      "count": 6,
+      "samples": [
+        {
+          "bus_no": "JXM4853",
+          "route": "U6028",
+          "latitude": 2.999853,
+          "longitude": 101.596518,
+          "dt_gps": "2026-10-18 14:04:11",
+          "dir": "01",
+          "speed": 0
+        },
+        {
+          "bus_no": "JXM2896",
+          "route": "U6028",
+          "latitude": 3.047833,
+          "longitude": 101.620645,
+          "dt_gps": "2026-10-18 14:04:06",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T4069",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "JXM4855",
+          "route": "T4069",
+          "latitude": 3.060573,
+          "longitude": 101.77196,
+          "dt_gps": "2026-10-18 14:04:01",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "JXM2876",
+          "route": "T4069",
+          "latitude": 3.155965,
+          "longitude": 101.902817,
+          "dt_gps": "2026-10-18 14:04:08",
+          "dir": "01",
+          "speed": 44
+        }
+      ]
+    },
+    {
+      "route": "U2538",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "JQB7256",
+          "route": "U2538",
+          "latitude": 3.208615,
+          "longitude": 101.74269,
+          "dt_gps": "2026-10-18 14:04:02",
+          "dir": "02",
+          "speed": 9
+        },
+        {
+          "bus_no": "JNS8433",
+          "route": "U2538",
+          "latitude": 3.194707,
+          "longitude": 101.761092,
+          "dt_gps": "2026-10-18 14:04:10",
+          "dir": "01",
+          "speed": 44
+        }
+      ]
+    },
+    {
+      "route": "U2548",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "JNS3753",
+          "route": "U2548",
+          "latitude": 3.168488,
+          "longitude": 101.696997,
+          "dt_gps": "2026-10-18 14:04:07",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "PKY919",
+          "route": "U2548",
+          "latitude": 3.18815,
+          "longitude": 101.7215,
+          "dt_gps": "2026-10-18 14:04:08",
+          "dir": null,
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "U2018",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "JXM1640",
+          "route": "U2018",
+          "latitude": 3.205748,
+          "longitude": 101.698747,
+          "dt_gps": "2026-10-18 14:04:11",
+          "dir": "02",
+          "speed": 25
+        },
+        {
+          "bus_no": "JQV3343",
+          "route": "U2018",
+          "latitude": 3.199443,
+          "longitude": 101.69226,
+          "dt_gps": "2026-10-18 14:04:09",
+          "dir": "01",
+          "speed": 30
+        }
+      ]
+    },
+    {
+      "route": "U1708",
+      "count": 5,
+      "samples": [
+        {
+          "bus_no": "JXM2854",
+          "route": "U1708",
+          "latitude": 3.165092,
+          "longitude": 101.696202,
+          "dt_gps": "2026-10-18 14:04:12",
+          "dir": "01",
+          "speed": 27
+        },
+        {
+          "bus_no": "JXM2894",
+          "route": "U1708",
+          "latitude": 3.251302,
+          "longitude": 101.689847,
+          "dt_gps": "2026-10-18 14:04:13",
+          "dir": "02",
+          "speed": 22
+        }
+      ]
+    },
+    {
+      "route": "T7790",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "RAPID579",
+          "route": "T7790",
+          "latitude": 3.082252,
+          "longitude": 101.562748,
+          "dt_gps": "2026-10-18 14:04:11",
+          "dir": "02",
+          "speed": 37
+        },
+        {
+          "bus_no": "RAPID622",
+          "route": "T7790",
+          "latitude": 3.06416,
+          "longitude": 101.558322,
+          "dt_gps": "2026-10-18 14:04:15",
+          "dir": "02",
+          "speed": 31
+        }
+      ]
+    },
+    {
+      "route": "T7620",
+      "count": 4,
+      "samples": [
+        {
+          "bus_no": "RAPID614",
+          "route": "T7620",
+          "latitude": 3.070172,
+          "longitude": 101.521378,
+          "dt_gps": "2026-10-18 14:02:10",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID592",
+          "route": "T7620",
+          "latitude": 3.185402,
+          "longitude": 101.578133,
+          "dt_gps": "2026-10-18 14:04:07",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T7640",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "RAPID615",
+          "route": "T7640",
+          "latitude": 3.062183,
+          "longitude": 101.500405,
+          "dt_gps": "2026-10-18 14:04:09",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID571",
+          "route": "T7640",
+          "latitude": 3.062158,
+          "longitude": 101.500508,
+          "dt_gps": "2026-10-18 14:04:10",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T7650",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "RAPID598",
+          "route": "T7650",
+          "latitude": 3.067337,
+          "longitude": 101.487033,
+          "dt_gps": "2026-10-18 14:04:14",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID597",
+          "route": "T7650",
+          "latitude": 3.067388,
+          "longitude": 101.48689,
+          "dt_gps": "2026-10-18 14:04:08",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T7290",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "RAPID582",
+          "route": "T7290",
+          "latitude": 3.081322,
+          "longitude": 101.44058,
+          "dt_gps": "2026-10-18 14:04:14",
+          "dir": "01",
+          "speed": 40
+        },
+        {
+          "bus_no": "RAPID596",
+          "route": "T7290",
+          "latitude": 3.068298,
+          "longitude": 101.45065,
+          "dt_gps": "2026-10-18 14:04:08",
+          "dir": "02",
+          "speed": 22
+        }
+      ]
+    },
+    {
+      "route": "T7280",
+      "count": 3,
+      "samples": [
+        {
+          "bus_no": "RAPID619",
+          "route": "T7280",
+          "latitude": 3.07539,
+          "longitude": 101.448685,
+          "dt_gps": "2026-10-18 14:04:17",
+          "dir": "02",
+          "speed": 6
+        },
+        {
+          "bus_no": "RAPID580",
+          "route": "T7280",
+          "latitude": 3.06885,
+          "longitude": 101.45073,
+          "dt_gps": "2026-10-18 14:04:08",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T7250",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "RAPID570",
+          "route": "T7250",
+          "latitude": 3.04765,
+          "longitude": 101.447083,
+          "dt_gps": "2026-10-18 14:03:37",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID584",
+          "route": "T7250",
+          "latitude": 3.046825,
+          "longitude": 101.449888,
+          "dt_gps": "2026-10-18 14:04:16",
+          "dir": "02",
+          "speed": 15
+        }
+      ]
+    },
+    {
+      "route": "T7220",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "RAPID574",
+          "route": "T7220",
+          "latitude": 3.028913,
+          "longitude": 101.467833,
+          "dt_gps": "2026-10-18 14:04:11",
+          "dir": "01",
+          "speed": 38
+        },
+        {
+          "bus_no": "RAPID610",
+          "route": "T7220",
+          "latitude": 3.047752,
+          "longitude": 101.446968,
+          "dt_gps": "2026-10-18 14:04:14",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T7210",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "RAPID562",
+          "route": "T7210",
+          "latitude": 3.017322,
+          "longitude": 101.420288,
+          "dt_gps": "2026-10-18 14:04:16",
+          "dir": "01",
+          "speed": 54
+        },
+        {
+          "bus_no": "RAPID611",
+          "route": "T7210",
+          "latitude": 3.027325,
+          "longitude": 101.4421,
+          "dt_gps": "2026-10-18 14:04:14",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T7190",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "RAPID586",
+          "route": "T7190",
+          "latitude": 3.010692,
+          "longitude": 101.429705,
+          "dt_gps": "2026-10-18 14:04:17",
+          "dir": "02",
+          "speed": 21
+        },
+        {
+          "bus_no": "RAPID527",
+          "route": "T7190",
+          "latitude": 3.004877,
+          "longitude": 101.441238,
+          "dt_gps": "2026-10-18 14:04:17",
+          "dir": "02",
+          "speed": 15
+        }
+      ]
+    },
+    {
+      "route": "T7800",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "RAPID624",
+          "route": "T7800",
+          "latitude": 3.133932,
+          "longitude": 101.599278,
+          "dt_gps": "2026-10-18 14:04:15",
+          "dir": "01",
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID603",
+          "route": "T7800",
+          "latitude": 3.128838,
+          "longitude": 101.60174,
+          "dt_gps": "2026-10-18 14:04:17",
+          "dir": "02",
+          "speed": 12
+        }
+      ]
+    },
+    {
+      "route": "T7810",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "RAPID617",
+          "route": "T7810",
+          "latitude": 3.112815,
+          "longitude": 101.604427,
+          "dt_gps": "2026-10-18 14:04:14",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID512",
+          "route": "T7810",
+          "latitude": 3.112933,
+          "longitude": 101.604392,
+          "dt_gps": "2026-10-18 14:04:13",
+          "dir": "02",
+          "speed": 0
+        }
+      ]
+    },
+    {
+      "route": "T7530",
+      "count": 2,
+      "samples": [
+        {
+          "bus_no": "RAPID591",
+          "route": "T7530",
+          "latitude": 3.069782,
+          "longitude": 101.521152,
+          "dt_gps": "2026-10-18 14:04:15",
+          "dir": "02",
+          "speed": 0
+        },
+        {
+          "bus_no": "RAPID616",
+          "route": "T7530",
+          "latitude": 3.076095,
+          "longitude": 101.525035,
+          "dt_gps": "2026-10-18 14:04:13",
+          "dir": "02",
+          "speed": 24
+        }
+      ]
+    }
+  ]
+}
