@@ -17,8 +17,8 @@ function project(line,pos,heading=null,minAlong=0){
   return best;
 }
 export function prepareLines(lines){
-  return lines.filter(l=>l.shape.length>1).map(l=>{
-    const line={route:l.routeId,headsign:l.headsign,points:l.shape,cum:[0],stops:[]};
+  return lines.filter(l=>l.shape.length>1).map((l,index)=>{
+    const line={route:l.routeId,key:l.patternId||l.routeId+'/'+index,dirCode:l.dirCode,headsign:l.headsign,points:l.shape,cum:[0],stops:[]};
     for(let i=1;i<l.shape.length;i++)line.cum.push(line.cum[i-1]+approxM(l.shape[i-1],l.shape[i]));
     let from=0;
     for(const s of l.stops){const hit=project(line,s.pos,null,from);if(!hit||hit.gap>150)continue;from=hit.along;line.stops.push({...s,along:hit.along});}
@@ -65,10 +65,11 @@ export function stopArrivals(lines,stop,buses,now=Date.now(),traffic=null,histor
     const {line,hit}=hits[0];
     // Equally plausible opposite patterns cannot safely establish a boarding direction.
     if(hits[1]&&hits[1].hit.score-hit.score<12&&hits[1].line.headsign!==line.headsign){unknown.push({bus,reason:'行驶方向待确认'});continue;}
-    const targets=line.stops.filter(s=>s.id===stop.id&&s.along>=hit.along-25);
+    if(stop.boarding&&line.key!==stop.boarding.lineKey)continue;
+    const targets=stop.boarding?line.stops.filter((s,i)=>i===stop.boarding.stopIndex&&s.id===stop.id&&s.along>=hit.along-25&&s.along<stop.boarding.destinationAlong):line.stops.filter(s=>s.id===stop.id&&s.along>=hit.along-25);
     if(!targets.length)continue; // Do not invent a terminus turnaround or wrap a loop.
     const meters=Math.max(0,targets[0].along-hit.along);
-    if(meters<=35&&approxM(bus.pos,stop.pos)<=50){arrivals.push({bus,meters,minutes:0,headsign:line.headsign});continue;}
+    if(meters<=35&&approxM(bus.pos,stop.pos)<=50){arrivals.push({bus,meters,minutes:0,headsign:stop.boarding?.destinationName||line.headsign});continue;}
     const road=traffic?.view(bus,now)||{speed:bus.speed,label:'路况待判断',historical:false};
     if(!Number.isFinite(road.speed)||road.speed<3||road.speed>100){unknown.push({bus,reason:road.speed<3?'车辆停车或持续低速，暂不估算':'车速不可用，暂不估算'});continue;}
     const peers=[];
@@ -82,7 +83,7 @@ export function stopArrivals(lines,stop,buses,now=Date.now(),traffic=null,histor
       peers.push({id:other.id,key:other.route+'/'+other.id,along:location.along,speed:recent.speed});
     }
     const prediction=estimatePath({line,from:hit.along,to:targets[0].along,now,bus,road,peers,history});
-    arrivals.push({bus,meters,minutes:prediction?.minutes??Math.max(1,Math.ceil(meters/(road.speed/3.6)/60)),headsign:line.headsign,traffic:road,prediction});
+    arrivals.push({bus,meters,minutes:prediction?.minutes??Math.max(1,Math.ceil(meters/(road.speed/3.6)/60)),headsign:stop.boarding?.destinationName||line.headsign,traffic:road,prediction});
   }
   return {arrivals:arrivals.sort((a,b)=>a.minutes-b.minutes||a.meters-b.meters),unknown};
 }

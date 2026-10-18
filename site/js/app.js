@@ -1,6 +1,7 @@
 import { parseLocal, myt, hhmm, loadBundle, RouteIndex, routeById, fxPoints, fxView, fxRate } from "./core.js";
 import { NetworkFeed, requestSpacing } from "./live.js";
-import { prepareLines, nearbyStops, stopArrivals, TrafficHistory } from "./nearby.js?v=eta2";
+import { prepareLines, stopArrivals, TrafficHistory } from "./nearby.js?v=direction1";
+import { directionChoices, boardingStops } from "./boarding.js";
 import { HistoricalProfiles } from "./prediction.js";
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -10,6 +11,7 @@ const portraits=["dog","gentleman","hamster","cat"];
 let routes=[],byId=new Map(),shown=new Set(DEFAULT),buses=[],selected=null,feed=null,position=null,rate=null,latestFeedTime=null,savedSelection=false;
 const shapes=new Map(),loadingShapes=new Map(),markers=new Map();
 let nearbyActive=false,nearbyTicket=0,nearbyLines=[],nearbyChoices=[],nearbyStop=null,stopMarker=null,locationTime=0,locationAccuracy=0;
+let boardingRoute='',boardingOptions=[],boardingChoice=null;
 const trafficHistory=new TrafficHistory();
 const historical=new HistoricalProfiles(),historyRequests=new Map();let historyReady=null;
 function loadHistorical(){
@@ -62,7 +64,8 @@ async function getShape(id){
   if(loadingShapes.has(id))return loadingShapes.get(id);
   const route=byId.get(id);if(!route)return null;
   const promise=fetch("network/"+route.file).then(r=>{if(!r.ok)throw Error("线路文件暂不可用");return r.json();}).then(data=>{
-    const bundle=loadBundle({routes:[{id,name:route.name,lines:data.lines.map(l=>({dir:"",headsign:l.headsign,shape:l.shape,stops:l.stops}))}]});
+    const bundle=loadBundle({routes:[{id,name:route.name,lines:data.lines.map(l=>({dir:l.direction,headsign:l.headsign,shape:l.shape,stops:l.stops}))}]});
+    bundle.lines.forEach((line,i)=>line.patternId=id+'/'+i);
     const result={...bundle,index:new RouteIndex(bundle.lines),prepared:prepareLines(bundle.lines)};shapes.set(id,result);ensureHistorical(id);return result;
   }).catch(()=>null).finally(()=>loadingShapes.delete(id));
   loadingShapes.set(id,promise);return promise;
@@ -117,22 +120,42 @@ function selectNearby(stop){
   map.fitBounds(L.latLngBounds([position,stop.pos]),{padding:[55,55],maxZoom:16});renderNearby();
 }
 async function showNearby(){
-  nearbyActive=true;const ticket=++nearbyTicket;
-  $("nearby-panel").hidden=false;nearbyStop=null;nearbyLines=[];$('nearby-distance').textContent='';$('nearby-load-status').textContent='';
+  nearbyActive=true;$("nearby-panel").hidden=false;
+  if(!shown.has(boardingRoute)){boardingRoute=shown.size===1?[...shown][0]:'';boardingChoice=null;}
+  $('boarding-route').innerHTML='<option value="">选择要乘坐的线路</option>'+[...shown].map(id=>'<option value="'+esc(id)+'">'+esc(routeName(id))+'</option>').join('');
+  $('boarding-route').value=boardingRoute;
+  await loadBoardingRoute(boardingRoute);
+}
+function clearBoardingResult(){
+  nearbyStop=null;nearbyChoices=[];
   if(stopMarker){map.removeLayer(stopMarker);stopMarker=null;}
-  $("nearby-options").innerHTML='';$("nearby-arrivals").innerHTML='';
-  if(!shown.size){$("nearby-title").textContent='请先选择公交线路';return;}
-  if(!position){$("nearby-title").textContent='请先允许获取你的位置';return;}
-  $("nearby-title").textContent='正在查找所选线路的最近站点…';
-  const ids=[...shown];let failed=0;
-  for(let offset=0;offset<ids.length;offset+=8){
-    const batch=await Promise.all(ids.slice(offset,offset+8).map(getShape));
-    if(ticket!==nearbyTicket)return;
-    for(const bundle of batch)if(bundle)nearbyLines.push(...bundle.prepared);else failed++;
-  }
-  nearbyChoices=nearbyStops(nearbyLines,position);
-  $("nearby-load-status").textContent=failed?failed+' 条线路站点未能读取，可点击最近站点重试。':'';
-  if(!nearbyChoices.length){$("nearby-title").textContent='所选线路暂无可用站点，请换一条线路或重试';return;}
+  for(const id of ['nearby-distance','nearby-load-status','boarding-summary'])$(id).textContent='';
+  $('nearby-options').innerHTML='';$('nearby-arrivals').innerHTML='';
+}
+async function loadBoardingRoute(id){
+  const ticket=++nearbyTicket;boardingRoute=id;clearBoardingResult();nearbyLines=[];boardingOptions=[];
+  $('boarding-direction').innerHTML='<option value="">'+(id?'正在读取行驶方向…':'请先选择线路')+'</option>';
+  $('boarding-direction').disabled=true;$('find-boarding').disabled=true;
+  if(!id){boardingChoice=null;$('nearby-title').textContent=shown.size?'先选择线路，再选择往哪边去':'请先在上方选择公交线路';return;}
+  const savedKey=boardingChoice?.route===id?boardingChoice.key:null;
+  $('nearby-title').textContent='请选择乘车方向';
+  const bundle=await getShape(id);if(ticket!==nearbyTicket)return;
+  if(!bundle){$('nearby-title').textContent='线路方向暂不可用，请重新选择线路重试';boardingChoice=null;return;}
+  nearbyLines=bundle.prepared;boardingOptions=directionChoices(nearbyLines);
+  $('boarding-direction').innerHTML='<option value="">选择往哪边去</option>'+boardingOptions.map(o=>'<option value="'+esc(o.key)+'">'+esc(o.label)+'</option>').join('');
+  $('boarding-direction').disabled=!boardingOptions.length;
+  boardingChoice=boardingOptions.find(o=>o.key===savedKey)||null;
+  $('boarding-direction').value=boardingChoice?.key||'';
+  if(!boardingOptions.length){$('nearby-title').textContent='此线路缺少可确认的目的地方向';return;}
+  refreshBoardingStops();
+}
+function refreshBoardingStops(){
+  clearBoardingResult();$('find-boarding').disabled=!boardingChoice;
+  if(!boardingChoice){$('nearby-title').textContent='请选择往哪边去，之后再查找上车站';return;}
+  $('boarding-summary').textContent=routeName(boardingRoute)+' · '+boardingChoice.label+(boardingChoice.loop?' · 只查找去往该目的地之前的沿途上车站':'');
+  if(!position||Date.now()-locationTime>120000){$('nearby-title').textContent='方向已选好，请点“定位并找上车站”';return;}
+  nearbyChoices=boardingStops(boardingChoice,position);
+  if(!nearbyChoices.length){$('nearby-title').textContent='这个方向暂无可用上车站，请换方向';return;}
   selectNearby(nearbyChoices[0]);
 }
 function renderNearby(){
@@ -140,19 +163,18 @@ function renderNearby(){
   const s=nearbyStop;
   $("nearby-title").textContent=s.name;
   $("nearby-distance").textContent='距你直线约 '+Math.round(s.distance)+' 米 · 定位精度约 '+Math.round(locationAccuracy)+' 米'+(s.distance>2000?' · 站点较远，可换线路查看':'');
-  $("nearby-options").innerHTML=nearbyChoices.map((x,i)=>'<button class="'+(x.key===s.key?'on':'')+'" data-stop="'+i+'" aria-pressed="'+(x.key===s.key)+'">'+esc(x.name)+' · '+Math.round(x.distance)+' 米<br>'+esc([...x.routes].map(routeName).join(' / '))+'</button>').join('');
+  $("nearby-options").innerHTML=nearbyChoices.map((x,i)=>'<button class="'+(x.key===s.key?'on':'')+'" data-stop="'+i+'" aria-pressed="'+(x.key===s.key)+'">'+esc(x.name)+' · '+Math.round(x.distance)+' 米<br>往 '+esc(boardingChoice.destinationName)+'</button>').join('');
   $("nearby-options").querySelectorAll('button').forEach(button=>button.onclick=()=>selectNearby(nearbyChoices[Number(button.dataset.stop)]));
-  if(Date.now()-locationTime>120000){$("nearby-arrivals").textContent='你的位置已超过两分钟，请点“最近站点”重新定位。';return;}
+  if(Date.now()-locationTime>120000){$("nearby-arrivals").textContent='你的位置已超过两分钟，请点“定位并找上车站”更新。';return;}
   const result=stopArrivals(nearbyLines,s,buses.filter(b=>shown.has(b.route)),Date.now(),trafficHistory,historical);
   $("nearby-arrivals").innerHTML=result.arrivals.slice(0,5).map((a,i)=>'<button data-arrival="'+i+'"><b>'+esc(routeName(a.bus.route))+' · '+esc(a.bus.id)+'</b><strong>'+(a.minutes===0?'已到站附近':a.prediction?'预计约 '+a.prediction.low+'–'+a.prediction.high+' 分钟':'预计约 '+a.minutes+' 分钟')+'</strong><small>'+esc(a.headsign||'沿当前行驶方向')+'</small><small>沿线约 '+Math.round(a.meters)+' 米 · '+(a.bus.speed??'—')+' km/h · GPS '+age(a.bus.gpsMs)+'</small><small>'+esc(a.prediction?.label||a.traffic?.label||'到站附近')+(a.traffic?.historical?' · 近期均速 '+a.traffic.speed.toFixed(1)+' km/h':'')+'</small><small>'+esc(a.prediction?.source||'')+'</small><small>'+esc(a.minutes===0?'':a.prediction?.historyMonth?'历史月份 '+a.prediction.historyMonth+(a.prediction.staleHistory?'（较旧，仅供参考）':''):'无匹配的历史路段参考')+'</small></button>').join('')||'<p class="muted">暂无可确认正驶向此站的车辆；不代表线路停运。</p>';
   $("nearby-arrivals").querySelectorAll('button').forEach(button=>button.onclick=()=>focusBus(result.arrivals[Number(button.dataset.arrival)].bus));
   if(result.unknown.length){const note=document.createElement('p');note.className='muted';note.textContent=result.unknown.slice(0,3).map(x=>routeName(x.bus.route)+' '+x.bus.id+'：'+x.reason).join('；');$("nearby-arrivals").append(note);}
 }
-$("nearest-stop").onclick=()=>{
-  if(!shown.size){showNearby();return;}
-  nearbyActive=true;
-  if(!position||Date.now()-locationTime>120000)$("locate").click();else showNearby();
-};
+$('boarding-route').onchange=()=>{boardingChoice=null;loadBoardingRoute($('boarding-route').value);};
+$('boarding-direction').onchange=()=>{boardingChoice=boardingOptions.find(o=>o.key===$('boarding-direction').value)||null;refreshBoardingStops();};
+$('find-boarding').onclick=()=>{if(!boardingChoice)return;if(!position||Date.now()-locationTime>120000)$('locate').click();else refreshBoardingStops();};
+$("nearest-stop").onclick=()=>{showNearby();$('nearby-panel').scrollIntoView({behavior:'smooth',block:'nearest'});};
 setInterval(renderNearby,10000);
 $("route-search").oninput=renderOptions;
 $("all-routes").onclick=()=>{shown=new Set(routes.map(r=>r.id));applySelection();$("route-search").value="";renderOptions();};
