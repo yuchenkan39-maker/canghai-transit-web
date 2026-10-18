@@ -38,7 +38,8 @@ export const mytMs = (y, m, d, h = 0, min = 0) => Date.UTC(y, m - 1, d, h, min) 
 /** "2026-10-16T17:00" or "2026-10-16 17:00:00" (Malaysia time) → instant, or NaN. */
 export function parseLocal(s) {
   if (!s || s.length < 16) return NaN;
-  const t = Date.parse(s.slice(0, 16).replace(" ", "T") + ":00+08:00");
+  const match = /^(\d{4}-\d{2}-\d{2})[T ](\d{2}:\d{2})(?::(\d{2}))?/.exec(s);
+  const t = match ? Date.parse(match[1] + "T" + match[2] + ":" + (match[3] || "00") + "+08:00") : NaN;
   return t;
 }
 export const pad2 = (n) => String(n).padStart(2, "0");
@@ -748,4 +749,3 @@ export const planB = (rainingNow, nextMin) => !!rainingNow && (nextMin == null |
 export const planBText = (nextMin) => `🌧 正在下雨，${nextMin == null ? "一小时内都没看到车" : `下一班还要 ${nextMin} 分钟`}，要不要叫个 Grab？`;
 
 export const aqiLabel = (a) => (a <= 50 ? "好" : a <= 100 ? "一般" : a <= 150 ? "敏感人群注意" : a <= 200 ? "不健康" : a <= 300 ? "很不健康" : "危险");
-
