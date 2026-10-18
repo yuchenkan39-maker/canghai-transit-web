@@ -5,7 +5,7 @@ import {directionChoices,boardingStops} from './boarding.js';
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const DEFAULT=['T7900','T7860','P0010','P0020'],portraits=['dog','gentleman','hamster','cat'];
-const palette=['#308873','#4f8cbd','#9a78b7','#db8b64','#b49345','#518b9d'];
+const palette=['#2F7FED','#0E9F76','#8B5CF6','#E5487F','#C36C1E','#177E89','#8E5A9D','#657C28'];
 let routes=[],byId=new Map(),shown=new Set(DEFAULT),buses=[],selected=null,feed=null,position=null,rate=null;
 let boardingRoute='',boardingOptions=[],boardingChoice=null,nearbyStop=null,ticket=0,selfMarker=null,accuracy=null,stopMarker=null;
 const shapes=new Map(),loadingShapes=new Map(),markers=new Map();
