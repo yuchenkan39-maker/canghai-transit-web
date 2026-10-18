@@ -1,232 +1,121 @@
-import { parseLocal, myt, hhmm, loadBundle, RouteIndex, routeById, fxPoints, fxView, fxRate } from "./core.js";
-import { NetworkFeed, requestSpacing } from "./live.js";
-import { prepareLines, stopArrivals, TrafficHistory } from "./nearby.js?v=direction1";
-import { directionChoices, boardingStops } from "./boarding.js";
-import { HistoricalProfiles } from "./prediction.js";
+import {parseLocal,hhmm,loadBundle,RouteIndex,fxRate} from './core.js';
+import {NetworkFeed} from './live.js';
+import {prepareLines} from './nearby.js?v=clean1';
+import {directionChoices,boardingStops} from './boarding.js';
 const $=id=>document.getElementById(id);
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const DEFAULT=["T7900","T7860","P0010","P0020"];
-const palette=["#2F7FED","#0E9F76","#8B5CF6","#E5487F","#C36C1E","#177E89","#8E5A9D","#657C28"];
-const portraits=["dog","gentleman","hamster","cat"];
-let routes=[],byId=new Map(),shown=new Set(DEFAULT),buses=[],selected=null,feed=null,position=null,rate=null,latestFeedTime=null,savedSelection=false;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const DEFAULT=['T7900','T7860','P0010','P0020'],portraits=['dog','gentleman','hamster','cat'];
+const palette=['#308873','#4f8cbd','#9a78b7','#db8b64','#b49345','#518b9d'];
+let routes=[],byId=new Map(),shown=new Set(DEFAULT),buses=[],selected=null,feed=null,position=null,rate=null;
+let boardingRoute='',boardingOptions=[],boardingChoice=null,nearbyStop=null,ticket=0,selfMarker=null,accuracy=null,stopMarker=null;
 const shapes=new Map(),loadingShapes=new Map(),markers=new Map();
-let nearbyActive=false,nearbyTicket=0,nearbyLines=[],nearbyChoices=[],nearbyStop=null,stopMarker=null,locationTime=0,locationAccuracy=0;
-let boardingRoute='',boardingOptions=[],boardingChoice=null;
-const trafficHistory=new TrafficHistory();
-const historical=new HistoricalProfiles(),historyRequests=new Map();let historyReady=null;
-function loadHistorical(){
-  if(historyReady)return historyReady;
-  historyReady=fetch('history/catalog.json',{signal:AbortSignal.timeout(15000)}).then(r=>{if(!r.ok)throw Error('历史参考暂不可用');return r.json();}).then(c=>{
-    historical.setCatalog(c);if(!historical.catalog)throw Error('历史数据格式不匹配');
-    $('prediction-status').textContent='历史参考：'+c.sourceMonth+' · '+Object.keys(c.routes).length+' 条线路 · 工作日／周末、时段及方向分开统计。未覆盖路段使用车速估算；未接入商业道路路况。';
-    return c;
-  }).catch(()=>{$('prediction-status').textContent='历史参考暂不可用，当前使用实时公交车速估算。';return null;});
-  return historyReady;
-}
-function ensureHistorical(id){
-  if(historyRequests.has(id))return historyRequests.get(id);
-  const promise=loadHistorical().then(async c=>{
-    const entry=c?.routes?.[id];if(!entry)return;
-    const r=await fetch('history/'+entry.file,{signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error('历史线路未读取');
-    historical.setRoute(id,await r.json());renderNearby();
-  }).catch(()=>{historyRequests.delete(id);});
-  historyRequests.set(id,promise);return promise;
-}
-try{const saved=JSON.parse(localStorage.getItem("transit.routes"));if(Array.isArray(saved)&&saved.every(id=>typeof id==="string")){shown=new Set(saved);savedSelection=true;}}catch(e){}
-const map=L.map("map",{minZoom:9,maxZoom:19,preferCanvas:true}).setView([3.1135,101.649],12);
-L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
+try{const saved=JSON.parse(localStorage.getItem('transit.routes'));if(Array.isArray(saved)&&saved.every(x=>typeof x==='string'))shown=new Set(saved);}catch{}
+const map=L.map('map',{minZoom:9,maxZoom:19,preferCanvas:true}).setView([3.1135,101.649],12);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,className:'fresh-map',attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
 const shapeLayer=L.layerGroup().addTo(map),stopLayer=L.layerGroup().addTo(map);
-new ResizeObserver(()=>map.invalidateSize()).observe($("map"));
-const color=id=>byId.get(id)?.color||"#777";
-const portrait=id=>byId.get(id)?.portrait||"dog";
-const routeName=id=>byId.get(id)?.name||id;
-const age=ms=>{const n=Math.max(0,Math.round((Date.now()-ms)/1000));return n<60?n+" 秒前":Math.floor(n/60)+" 分钟前";};
-function markerHtml(bus){
-  return '<div class="marker'+(selected===bus.route+"/"+bus.id?' selected':'')+'" style="--route:'+color(bus.route)+'">'+(bus.angle==null?'':'<i class="arrow" style="transform:rotate('+bus.angle+'deg)"></i>')+'<img class="portrait" src="assets/crew/'+portrait(bus.route)+'.jpg" alt=""><b>'+esc(routeName(bus.route))+'</b></div>';
-}
-function save(){try{localStorage.setItem("transit.routes",JSON.stringify([...shown]));}catch(e){}}
-function updateQuery(){
-  $("selection-count").textContent="· 已选 "+shown.size+" 条";
-  const cycle=Math.ceil(requestSpacing(shown.size)*shown.size/1000);
-  $("query-note").textContent=shown.size>12
-    ? "全网分批查询，一轮约 "+cycle+" 秒；收到车辆后逐步显示。聚焦几条线路可提高刷新频率。"
-    : shown.size?"当前线路约每 5 秒查询，GPS 实际更新时间由公交系统决定。":"尚未选择线路。";
-}
+new ResizeObserver(()=>map.invalidateSize()).observe($('map'));
+const routeName=id=>byId.get(id)?.name||id,color=id=>byId.get(id)?.color||'#777',portrait=id=>byId.get(id)?.portrait||'dog';
+const age=ms=>{const n=Math.max(0,Math.round((Date.now()-ms)/1000));return n<60?n+' 秒前':Math.floor(n/60)+' 分钟前';};
 function renderOptions(){
-  const q=$("route-search").value.trim().toLowerCase();
-  const list=routes.filter(r=>!q||(r.name+" "+r.id+" "+r.title).toLowerCase().includes(q));
-  $("route-options").innerHTML=list.map(r=>'<button class="route-btn" data-route="'+esc(r.id)+'" aria-pressed="'+shown.has(r.id)+'" title="'+esc(r.title)+'">'+esc(r.name)+'</button>').join("")||'<p class="muted">未找到线路</p>';
-  $("route-options").querySelectorAll("button").forEach(button=>button.onclick=()=>{const id=button.dataset.route;shown.has(id)?shown.delete(id):shown.add(id);applySelection();});
-  updateQuery();
+ const q=$('route-search').value.trim().toLowerCase();
+ const options=q?routes.filter(r=>(r.name+' '+r.id+' '+r.title).toLowerCase().includes(q)).sort((a,b)=>Number(b.name.toLowerCase()===q)-Number(a.name.toLowerCase()===q)).slice(0,8):[];
+ $('route-options').hidden=!q;
+ $('route-options').innerHTML=options.map(r=>'<button data-route="'+esc(r.id)+'" aria-pressed="'+shown.has(r.id)+'"><b>'+esc(r.name)+'</b><span>'+esc(r.title)+'</span><i>'+(shown.has(r.id)?'✓':'+')+'</i></button>').join('')||(q?'<p>无匹配线路</p>':'');
+ $('route-options').querySelectorAll('button').forEach(button=>button.onclick=()=>{const id=button.dataset.route;shown.has(id)?shown.delete(id):shown.add(id);$('route-search').value='';applySelection();});
+ $('selected-routes').innerHTML=[...shown].map(id=>'<button data-route="'+esc(id)+'" aria-label="移除 '+esc(routeName(id))+'" style="--route:'+color(id)+'">'+esc(routeName(id))+' <span>×</span></button>').join('');
+ $('selected-routes').querySelectorAll('button').forEach(button=>button.onclick=()=>{shown.delete(button.dataset.route);applySelection();});
+ $('clear-routes').hidden=!shown.size;
 }
 async function getShape(id){
-  if(shapes.has(id))return shapes.get(id);
-  if(loadingShapes.has(id))return loadingShapes.get(id);
-  const route=byId.get(id);if(!route)return null;
-  const promise=fetch("network/"+route.file).then(r=>{if(!r.ok)throw Error("线路文件暂不可用");return r.json();}).then(data=>{
-    const bundle=loadBundle({routes:[{id,name:route.name,lines:data.lines.map(l=>({dir:l.direction,headsign:l.headsign,shape:l.shape,stops:l.stops}))}]});
-    bundle.lines.forEach((line,i)=>line.patternId=id+'/'+i);
-    const result={...bundle,index:new RouteIndex(bundle.lines),prepared:prepareLines(bundle.lines)};shapes.set(id,result);ensureHistorical(id);return result;
-  }).catch(()=>null).finally(()=>loadingShapes.delete(id));
-  loadingShapes.set(id,promise);return promise;
+ if(shapes.has(id))return shapes.get(id);if(loadingShapes.has(id))return loadingShapes.get(id);
+ const route=byId.get(id);if(!route)return null;
+ const promise=fetch('network/'+route.file).then(r=>{if(!r.ok)throw Error();return r.json();}).then(data=>{
+  const bundle=loadBundle({routes:[{id,name:route.name,lines:data.lines.map(l=>({dir:l.direction,headsign:l.headsign,shape:l.shape,stops:l.stops}))}]});
+  bundle.lines.forEach((line,i)=>line.patternId=id+'/'+i);
+  const result={...bundle,index:new RouteIndex(bundle.lines),prepared:prepareLines(bundle.lines)};shapes.set(id,result);return result;
+ }).catch(()=>null).finally(()=>loadingShapes.delete(id));loadingShapes.set(id,promise);return promise;
 }
 async function drawShapes(){
-  shapeLayer.clearLayers();stopLayer.clearLayers();
-  const ids=shown.size<=8?[...shown]:selected?[selected.split("/")[0]]:[];
-  const data=await Promise.all(ids.map(getShape));
-  // A route may have been deselected while its geometry was loading.
-  shapeLayer.clearLayers();stopLayer.clearLayers();
-  for(let i=0;i<ids.length;i++){
-    if(!shown.has(ids[i])||!data[i])continue;
-    for(const line of data[i].lines){
-      L.polyline(line.shape,{color:color(ids[i]),weight:4,opacity:.7,interactive:false}).addTo(shapeLayer);
-      if(map.getZoom()>=14)for(const s of line.stops)L.circleMarker(s.pos,{radius:4,color:color(ids[i]),weight:2,fillColor:"#fff",fillOpacity:1}).bindTooltip(esc(s.name)).addTo(stopLayer);
-    }
-  }
+ const ids=selected?[selected.split('/')[0]]:shown.size<=6?[...shown]:[];
+ const bundles=await Promise.all(ids.map(getShape));shapeLayer.clearLayers();stopLayer.clearLayers();
+ ids.forEach((id,i)=>{if(!shown.has(id)||!bundles[i])return;for(const line of bundles[i].lines){
+  L.polyline(line.shape,{color:color(id),weight:3,opacity:selected?.6:.35,interactive:false}).addTo(shapeLayer);
+  if(map.getZoom()>=15)for(const s of line.stops)L.circleMarker(s.pos,{radius:3,color:color(id),weight:1.5,fillColor:'#fff',fillOpacity:1}).bindTooltip(esc(s.name)).addTo(stopLayer);
+ }});
 }
-function applySelection(){
-  selected=null;save();feed?.setRoutes([...shown]);renderOptions();drawShapes();renderBuses();
-  if(nearbyActive)showNearby();
-}
-function focusBus(bus){
-  selected=bus.route+"/"+bus.id;map.flyTo(bus.pos,Math.max(15,map.getZoom()),{duration:.5});getShape(bus.route).then(()=>{drawShapes();renderBuses();});renderBuses();
-}
+function applySelection(){selected=null;try{localStorage.setItem('transit.routes',JSON.stringify([...shown]));}catch{}feed?.setRoutes([...shown]);renderOptions();drawShapes();renderBuses();if(!$('nearby-panel').hidden)showNearby();}
+function focusBus(bus){selected=bus.route+'/'+bus.id;map.flyTo(bus.pos,Math.max(15,map.getZoom()),{duration:.4});getShape(bus.route).then(()=>{drawShapes();renderBuses();});renderBuses();}
 function renderBuses(){
-  trafficHistory.observe(buses);
-  const visible=buses.filter(b=>shown.has(b.route));const seen=new Set();
-  for(const bus of visible){
-    const key=bus.route+"/"+bus.id;seen.add(key);let marker=markers.get(key);
-    const html=markerHtml(bus);
-    if(!marker){marker=L.marker(bus.pos,{icon:L.divIcon({className:"",html,iconSize:[0,0]}),keyboard:false}).addTo(map);marker.on("click",()=>focusBus(marker.bus));markers.set(key,marker);}
-    marker.bus=bus;marker.setLatLng(bus.pos);
-    if(marker.html!==html){marker.setIcon(L.divIcon({className:"",html,iconSize:[0,0]}));marker.html=html;}
-    marker.setZIndexOffset(key===selected?1000:0);
-  }
-  for(const [key,marker]of markers)if(!seen.has(key)){map.removeLayer(marker);markers.delete(key);}
-  $("bus-count").textContent=visible.length+" 辆有有效定位"+(latestFeedTime?" · 接收于 "+hhmm(latestFeedTime):"");
-  const cards=visible.slice().sort((a,b)=>Number(b.route+"/"+b.id===selected)-Number(a.route+"/"+a.id===selected)||routeName(a.route).localeCompare(routeName(b.route),undefined,{numeric:true})).slice(0,100);
-  $("vehicles").innerHTML=cards.map(bus=>{
-    const key=bus.route+"/"+bus.id;
-    const progress=shapes.get(bus.route)?.index.locate(bus.route,bus.pos,null,bus.angle);
-    const next=progress?.nextStop?"下一站约为 "+progress.nextStop:"点击查看所在路段";
-    return '<button class="vehicle'+(key===selected?' selected':'')+'" data-key="'+esc(key)+'" style="--route:'+color(bus.route)+'"><img class="portrait" src="assets/crew/'+portrait(bus.route)+'.jpg" alt=""><span><b>'+esc(routeName(bus.route))+' · '+esc(bus.id)+'</b><span>'+esc(next)+'</span><small>'+(bus.speed==null?"":bus.speed+" km/h · ")+'GPS '+age(bus.gpsMs)+'</small></span></button>';
-  }).join("")||'<p class="muted">'+(shown.size?"等待有效车辆位置。暂时没有位置不代表线路停运。":"先选择一条线路。")+'</p>';
-  $("vehicles").querySelectorAll("button").forEach(button=>button.onclick=()=>{const bus=visible.find(b=>b.route+"/"+b.id===button.dataset.key);if(bus)focusBus(bus);});
-  renderNearby();
+ const visible=buses.filter(b=>shown.has(b.route)),seen=new Set();
+ for(const bus of visible){const key=bus.route+'/'+bus.id;seen.add(key);let marker=markers.get(key);
+  const html='<div class="marker'+(selected===key?' selected':'')+'" style="--route:'+color(bus.route)+'">'+(bus.angle==null?'':'<i class="arrow" style="transform:rotate('+bus.angle+'deg)"></i>')+'<img class="portrait" src="assets/crew/'+portrait(bus.route)+'.jpg" alt=""><b>'+esc(routeName(bus.route))+'</b></div>';
+  if(!marker){marker=L.marker(bus.pos,{icon:L.divIcon({className:'',html,iconSize:[0,0]}),keyboard:false}).addTo(map);marker.on('click',()=>focusBus(marker.bus));markers.set(key,marker);}
+  marker.bus=bus;marker.setLatLng(bus.pos);if(marker.html!==html){marker.setIcon(L.divIcon({className:'',html,iconSize:[0,0]}));marker.html=html;}marker.setZIndexOffset(selected===key?1000:0);
+ }
+ for(const [key,marker]of markers)if(!seen.has(key)){map.removeLayer(marker);markers.delete(key);}
+ $('bus-count').textContent=visible.length+' 辆';
+ $('vehicles').innerHTML=visible.slice().sort((a,b)=>Number(b.route+'/'+b.id===selected)-Number(a.route+'/'+a.id===selected)).slice(0,80).map(bus=>{
+  const key=bus.route+'/'+bus.id,progress=shapes.get(bus.route)?.index.locate(bus.route,bus.pos,null,bus.angle);
+  return '<button class="vehicle'+(key===selected?' selected':'')+'" data-key="'+esc(key)+'" style="--route:'+color(bus.route)+'"><img class="portrait" src="assets/crew/'+portrait(bus.route)+'.jpg" alt=""><span><b>'+esc(routeName(bus.route))+' · '+esc(bus.id)+'</b>'+(progress?.nextStop?'<span>'+esc(progress.nextStop)+'</span>':'')+'<small>'+(bus.speed==null?'':bus.speed+' km/h · ')+age(bus.gpsMs)+'</small></span></button>';
+ }).join('')||'<p class="muted">'+(shown.size?'暂无车辆':'搜索并添加线路')+'</p>';
+ $('vehicles').querySelectorAll('button').forEach(button=>button.onclick=()=>{const b=visible.find(b=>b.route+'/'+b.id===button.dataset.key);if(b)focusBus(b);});
 }
-function selectNearby(stop){
-  nearbyStop=stop;if(stopMarker)map.removeLayer(stopMarker);
-  stopMarker=L.marker(stop.pos,{icon:L.divIcon({className:'',html:'<div class="nearest-stop-dot"></div>',iconSize:[22,22],iconAnchor:[11,11]})}).addTo(map).bindTooltip(esc(stop.name),{permanent:true,direction:'top'});
-  map.fitBounds(L.latLngBounds([position,stop.pos]),{padding:[55,55],maxZoom:16});renderNearby();
-}
+function clearStop(){nearbyStop=null;if(stopMarker){map.removeLayer(stopMarker);stopMarker=null;}$('nearby-options').innerHTML='';}
 async function showNearby(){
-  nearbyActive=true;$("nearby-panel").hidden=false;
-  if(!shown.has(boardingRoute)){boardingRoute=shown.size===1?[...shown][0]:'';boardingChoice=null;}
-  $('boarding-route').innerHTML='<option value="">选择要乘坐的线路</option>'+[...shown].map(id=>'<option value="'+esc(id)+'">'+esc(routeName(id))+'</option>').join('');
-  $('boarding-route').value=boardingRoute;
-  await loadBoardingRoute(boardingRoute);
-}
-function clearBoardingResult(){
-  nearbyStop=null;nearbyChoices=[];
-  if(stopMarker){map.removeLayer(stopMarker);stopMarker=null;}
-  for(const id of ['nearby-distance','nearby-load-status','boarding-summary'])$(id).textContent='';
-  $('nearby-options').innerHTML='';$('nearby-arrivals').innerHTML='';
+ $('nearby-panel').hidden=false;if(!shown.has(boardingRoute)){boardingRoute=shown.size===1?[...shown][0]:'';boardingChoice=null;}
+ $('boarding-route').innerHTML='<option value="">选择线路</option>'+[...shown].map(id=>'<option value="'+esc(id)+'">'+esc(routeName(id))+'</option>').join('');$('boarding-route').value=boardingRoute;await loadBoardingRoute(boardingRoute);
 }
 async function loadBoardingRoute(id){
-  const ticket=++nearbyTicket;boardingRoute=id;clearBoardingResult();nearbyLines=[];boardingOptions=[];
-  $('boarding-direction').innerHTML='<option value="">'+(id?'正在读取行驶方向…':'请先选择线路')+'</option>';
-  $('boarding-direction').disabled=true;$('find-boarding').disabled=true;
-  if(!id){boardingChoice=null;$('nearby-title').textContent=shown.size?'先选择线路，再选择往哪边去':'请先在上方选择公交线路';return;}
-  const savedKey=boardingChoice?.route===id?boardingChoice.key:null;
-  $('nearby-title').textContent='请选择乘车方向';
-  const bundle=await getShape(id);if(ticket!==nearbyTicket)return;
-  if(!bundle){$('nearby-title').textContent='线路方向暂不可用，请重新选择线路重试';boardingChoice=null;return;}
-  nearbyLines=bundle.prepared;boardingOptions=directionChoices(nearbyLines);
-  $('boarding-direction').innerHTML='<option value="">选择往哪边去</option>'+boardingOptions.map(o=>'<option value="'+esc(o.key)+'">'+esc(o.label)+'</option>').join('');
-  $('boarding-direction').disabled=!boardingOptions.length;
-  boardingChoice=boardingOptions.find(o=>o.key===savedKey)||null;
-  $('boarding-direction').value=boardingChoice?.key||'';
-  if(!boardingOptions.length){$('nearby-title').textContent='此线路缺少可确认的目的地方向';return;}
-  refreshBoardingStops();
+ const turn=++ticket;boardingRoute=id;clearStop();boardingOptions=[];$('boarding-direction').disabled=true;$('find-boarding').disabled=true;$('boarding-direction').innerHTML='<option value="">选择方向</option>';
+ if(!id){boardingChoice=null;$('nearby-title').textContent=shown.size?'选择线路和方向':'请先添加线路';return;}
+ const previous=boardingChoice?.route===id?boardingChoice.key:null,bundle=await getShape(id);if(turn!==ticket)return;
+ if(!bundle){$('nearby-title').textContent='读取失败，请重选线路';return;}
+ boardingOptions=directionChoices(bundle.prepared);$('boarding-direction').innerHTML='<option value="">选择方向</option>'+boardingOptions.map(o=>'<option value="'+esc(o.key)+'">'+esc(o.label.replace('（环线沿途站）',''))+'</option>').join('');$('boarding-direction').disabled=!boardingOptions.length;
+ boardingChoice=boardingOptions.find(o=>o.key===previous)||null;$('boarding-direction').value=boardingChoice?.key||'';refreshStops();
 }
-function refreshBoardingStops(){
-  clearBoardingResult();$('find-boarding').disabled=!boardingChoice;
-  if(!boardingChoice){$('nearby-title').textContent='请选择往哪边去，之后再查找上车站';return;}
-  $('boarding-summary').textContent=routeName(boardingRoute)+' · '+boardingChoice.label+(boardingChoice.loop?' · 只查找去往该目的地之前的沿途上车站':'');
-  if(!position||Date.now()-locationTime>120000){$('nearby-title').textContent='方向已选好，请点“定位并找上车站”';return;}
-  nearbyChoices=boardingStops(boardingChoice,position);
-  if(!nearbyChoices.length){$('nearby-title').textContent='这个方向暂无可用上车站，请换方向';return;}
-  selectNearby(nearbyChoices[0]);
-}
-function renderNearby(){
-  if(!nearbyActive||!nearbyStop)return;
-  const s=nearbyStop;
-  $("nearby-title").textContent=s.name;
-  $("nearby-distance").textContent='距你直线约 '+Math.round(s.distance)+' 米 · 定位精度约 '+Math.round(locationAccuracy)+' 米'+(s.distance>2000?' · 站点较远，可换线路查看':'');
-  $("nearby-options").innerHTML=nearbyChoices.map((x,i)=>'<button class="'+(x.key===s.key?'on':'')+'" data-stop="'+i+'" aria-pressed="'+(x.key===s.key)+'">'+esc(x.name)+' · '+Math.round(x.distance)+' 米<br>往 '+esc(boardingChoice.destinationName)+'</button>').join('');
-  $("nearby-options").querySelectorAll('button').forEach(button=>button.onclick=()=>selectNearby(nearbyChoices[Number(button.dataset.stop)]));
-  if(Date.now()-locationTime>120000){$("nearby-arrivals").textContent='你的位置已超过两分钟，请点“定位并找上车站”更新。';return;}
-  const result=stopArrivals(nearbyLines,s,buses.filter(b=>shown.has(b.route)),Date.now(),trafficHistory,historical);
-  $("nearby-arrivals").innerHTML=result.arrivals.slice(0,5).map((a,i)=>'<button data-arrival="'+i+'"><b>'+esc(routeName(a.bus.route))+' · '+esc(a.bus.id)+'</b><strong>'+(a.minutes===0?'已到站附近':a.prediction?'预计约 '+a.prediction.low+'–'+a.prediction.high+' 分钟':'预计约 '+a.minutes+' 分钟')+'</strong><small>'+esc(a.headsign||'沿当前行驶方向')+'</small><small>沿线约 '+Math.round(a.meters)+' 米 · '+(a.bus.speed??'—')+' km/h · GPS '+age(a.bus.gpsMs)+'</small><small>'+esc(a.prediction?.label||a.traffic?.label||'到站附近')+(a.traffic?.historical?' · 近期均速 '+a.traffic.speed.toFixed(1)+' km/h':'')+'</small><small>'+esc(a.prediction?.source||'')+'</small><small>'+esc(a.minutes===0?'':a.prediction?.historyMonth?'历史月份 '+a.prediction.historyMonth+(a.prediction.staleHistory?'（较旧，仅供参考）':''):'无匹配的历史路段参考')+'</small></button>').join('')||'<p class="muted">暂无可确认正驶向此站的车辆；不代表线路停运。</p>';
-  $("nearby-arrivals").querySelectorAll('button').forEach(button=>button.onclick=()=>focusBus(result.arrivals[Number(button.dataset.arrival)].bus));
-  if(result.unknown.length){const note=document.createElement('p');note.className='muted';note.textContent=result.unknown.slice(0,3).map(x=>routeName(x.bus.route)+' '+x.bus.id+'：'+x.reason).join('；');$("nearby-arrivals").append(note);}
+function refreshStops(){
+ clearStop();$('find-boarding').disabled=!boardingChoice;
+ if(!boardingChoice){$('nearby-title').textContent='选择目的地方向';return;}if(!position){$('nearby-title').textContent='点击找站，获取位置';return;}
+ const choices=boardingStops(boardingChoice,position);$('nearby-title').textContent='';
+ $('nearby-options').innerHTML=choices.map((s,i)=>'<button data-stop="'+i+'">'+esc(s.name)+' <small>'+Math.round(s.distance)+' m</small></button>').join('')||'暂无站点';
+ function selectStop(stop){nearbyStop=stop;if(stopMarker)map.removeLayer(stopMarker);stopMarker=L.circleMarker(stop.pos,{radius:7,color:'#287d65',weight:3,fillColor:'#fff',fillOpacity:1}).addTo(map).bindTooltip(esc(stop.name),{permanent:true,direction:'top'});map.fitBounds(L.latLngBounds([position,stop.pos]),{padding:[45,45],maxZoom:16});$('nearby-options').querySelectorAll('button').forEach((b,i)=>b.classList.toggle('on',choices[i]===stop));}
+ $('nearby-options').querySelectorAll('button').forEach(b=>b.onclick=()=>selectStop(choices[Number(b.dataset.stop)]));if(choices.length)selectStop(choices[0]);
 }
 $('boarding-route').onchange=()=>{boardingChoice=null;loadBoardingRoute($('boarding-route').value);};
-$('boarding-direction').onchange=()=>{boardingChoice=boardingOptions.find(o=>o.key===$('boarding-direction').value)||null;refreshBoardingStops();};
-$('find-boarding').onclick=()=>{if(!boardingChoice)return;if(!position||Date.now()-locationTime>120000)$('locate').click();else refreshBoardingStops();};
-$("nearest-stop").onclick=()=>{showNearby();$('nearby-panel').scrollIntoView({behavior:'smooth',block:'nearest'});};
-setInterval(renderNearby,10000);
-$("route-search").oninput=renderOptions;
-$("all-routes").onclick=()=>{shown=new Set(routes.map(r=>r.id));applySelection();$("route-search").value="";renderOptions();};
-$("usual-routes").onclick=()=>{shown=new Set(DEFAULT.filter(id=>byId.has(id)));applySelection();};
-$("clear-routes").onclick=()=>{shown.clear();applySelection();};
-$("fit").onclick=()=>{
-  const pts=buses.filter(b=>shown.has(b.route)).map(b=>b.pos);if(position)pts.push(position);
-  if(pts.length)map.fitBounds(L.latLngBounds(pts),{padding:[40,40],maxZoom:15});
-  else{const boxes=[...shown].map(id=>byId.get(id)?.bounds).filter(Boolean);if(boxes.length)map.fitBounds(L.latLngBounds(boxes.flatMap(b=>[[b[0],b[1]],[b[2],b[3]]])),{padding:[30,30]});}
+$('boarding-direction').onchange=()=>{boardingChoice=boardingOptions.find(o=>o.key===$('boarding-direction').value)||null;refreshStops();};
+$('find-boarding').onclick=()=>{if(boardingChoice)position?refreshStops():$('locate').click();};
+$('nearest-stop').onclick=()=>{$('nearby-panel').hidden?showNearby():($('nearby-panel').hidden=true);};
+$('route-search').oninput=renderOptions;$('route-search').onkeydown=e=>{if(e.key==='Escape'){$('route-search').value='';renderOptions();}};
+document.addEventListener('click',e=>{if(!e.target.closest('.search'))$('route-options').hidden=true;});
+$('route-search').onfocus=renderOptions;$('clear-routes').onclick=()=>{shown.clear();applySelection();};
+$('fit').onclick=()=>{const points=buses.filter(b=>shown.has(b.route)).map(b=>b.pos);if(position)points.push(position);if(points.length)map.fitBounds(L.latLngBounds(points),{padding:[50,50],maxZoom:15});};
+$('locate').onclick=()=>{
+ const status=$('location-status');if(!navigator.geolocation){status.textContent='无法定位';return;}$('locate').disabled=true;status.textContent='定位中…';
+ navigator.geolocation.getCurrentPosition(p=>{$('locate').disabled=false;position={lat:p.coords.latitude,lng:p.coords.longitude};if(selfMarker)map.removeLayer(selfMarker);if(accuracy)map.removeLayer(accuracy);
+  selfMarker=L.marker(position,{icon:L.divIcon({className:'',html:'<div class="location-dot"></div>',iconSize:[16,16],iconAnchor:[8,8]})}).addTo(map);accuracy=L.circle(position,{radius:p.coords.accuracy,color:'#458dd4',weight:1,fillOpacity:.06}).addTo(map);map.setView(position,15);status.textContent='± '+Math.round(p.coords.accuracy)+' m';if(boardingChoice)refreshStops();
+ },e=>{$('locate').disabled=false;status.textContent=e.code===1?'未允许定位':'定位失败，请重试';},{enableHighAccuracy:true,timeout:15000,maximumAge:30000});
 };
-let selfMarker=null,accuracy=null;
-$("locate").onclick=()=>{
-  const label=$("location-status");if(!navigator.geolocation){label.textContent="此浏览器不支持定位";return;}
-  label.textContent="正在获取你的位置…";$("locate").disabled=true;
-  navigator.geolocation.getCurrentPosition(p=>{
-    $("locate").disabled=false;position={lat:p.coords.latitude,lng:p.coords.longitude};
-    locationTime=Date.now();locationAccuracy=p.coords.accuracy;
-    if(selfMarker)map.removeLayer(selfMarker);if(accuracy)map.removeLayer(accuracy);
-    selfMarker=L.marker(position,{icon:L.divIcon({className:"",html:'<div class="location-dot"></div>',iconSize:[16,16],iconAnchor:[8,8]})}).addTo(map).bindTooltip("我的位置");
-    accuracy=L.circle(position,{radius:p.coords.accuracy,color:"#287bed",weight:1,fillOpacity:.08}).addTo(map);
-    map.setView(position,15);label.textContent="我的位置 · 精度约 "+Math.round(p.coords.accuracy)+" 米";
-    if(nearbyActive)showNearby();
-  },e=>{$("locate").disabled=false;label.textContent=e.code===1?"未允许定位，你仍可正常查车":e.code===3?"定位超时，请稍后重试":"暂时无法获取位置";},{enableHighAccuracy:true,timeout:15000,maximumAge:30000});
-};
-map.on("zoomend",drawShapes);
+map.on('zoomend',drawShapes);
 async function weather(){
   try{
     const q=new URLSearchParams({latitude:3.1209,longitude:101.6538,current:"temperature_2m,apparent_temperature,weather_code",hourly:"precipitation_probability,temperature_2m",forecast_days:2,timezone:"Asia/Kuala_Lumpur"});
     const r=await fetch("https://api.open-meteo.com/v1/forecast?"+q,{signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error();const d=await r.json();
     const hours=d.hourly.time.map((t,i)=>({t:parseLocal(t),p:d.hourly.precipitation_probability[i],temp:d.hourly.temperature_2m[i]})).filter(x=>x.t>=Date.now()).slice(0,8);
-    $("weather").innerHTML='<p>马大附近 · '+esc(d.current.time.replace("T"," "))+'</p><span class="rate">'+esc(d.current.temperature_2m)+'°C</span><span>　体感 '+esc(d.current.apparent_temperature)+'°C</span><div class="hourly">'+hours.map(x=>'<div class="hour">'+hhmm(x.t)+'<small>'+esc(x.temp)+'°C</small><small>雨 '+(x.p==null?"未知":esc(x.p)+"%")+'</small></div>').join("")+'</div>';
-  }catch(e){$("weather").textContent="天气暂时不可用，请稍后刷新";}
+    $("weather").innerHTML='<p>马大 · '+esc(d.current.time.replace("T"," "))+'</p><span class="rate">'+esc(d.current.temperature_2m)+'°C</span><span>　体感 '+esc(d.current.apparent_temperature)+'°C</span><div class="hourly">'+hours.map(x=>'<div class="hour">'+hhmm(x.t)+'<small>'+esc(x.temp)+'°C</small><small>雨 '+(x.p==null?"未知":esc(x.p)+"%")+'</small></div>').join("")+'</div>';
+  }catch(e){$("weather").textContent="天气暂不可用";}
 }
 function conversion(){const n=Number($("amount").value);$("conversion").textContent=rate&&Number.isFinite(n)&&n>=0?n.toLocaleString()+" 令吉 ≈ "+(n*rate).toFixed(2)+" 元":"";}
 $("amount").oninput=conversion;
 async function fx(){
-  try{const r=await fetch("https://api.frankfurter.dev/v1/latest?base=MYR&symbols=CNY",{signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error();const d=await r.json();rate=d.rates.CNY;if(!Number.isFinite(rate))throw Error();$("fx").innerHTML='<p>1 令吉 = <span class="rate">'+fxRate(rate)+'</span> 元</p><p class="muted">参考价更新于 '+esc(d.date)+'，实际换汇以服务商报价为准。</p>';conversion();}catch(e){$("fx").textContent="汇率暂时不可用";}
+  try{const r=await fetch("https://api.frankfurter.dev/v1/latest?base=MYR&symbols=CNY",{signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error();const d=await r.json();rate=d.rates.CNY;if(!Number.isFinite(rate))throw Error();$("fx").innerHTML='<p>1 令吉 = <span class="rate">'+fxRate(rate)+'</span> 元</p><p class="muted">'+esc(d.date)+'</p>';conversion();}catch(e){$("fx").textContent="汇率暂不可用";}
 }
 async function main(){
-  loadHistorical();weather();fx();setInterval(weather,600000);setInterval(fx,10800000);
-  try{
-    const response=await fetch("network/catalog.json");if(!response.ok)throw Error("线路目录读取失败");const catalog=await response.json();
-    // These route codes are directly queryable with the original RKL socket scheme.
-    routes=catalog.routes.filter(r=>r.category==="rapid-bus-kl").map((r,i)=>({...r,color:palette[i%palette.length],portrait:DEFAULT.includes(r.id)?portraits[DEFAULT.indexOf(r.id)]:portraits[i%portraits.length]}));
-    byId=new Map(routes.map(r=>[r.id,r]));shown=new Set([...shown].filter(id=>byId.has(id)));if(!shown.size&&!savedSelection)shown=new Set(DEFAULT.filter(id=>byId.has(id)));
-    $("network-count").textContent=routes.length+" 条 Rapid KL 类别线路";
-    renderOptions();drawShapes();
-    let scheduled=false;
-    feed=new NetworkFeed({routes:[...shown],onUpdate:list=>{buses=list;if(!scheduled){scheduled=true;setTimeout(()=>{scheduled=false;renderBuses();},250);}},onStatus:s=>{$("connection").textContent=s.message;if(s.updatedAt)latestFeedTime=s.updatedAt;}});
-    feed.start();renderBuses();
-  }catch(e){$("connection").textContent="线路目录暂时不可用，请刷新重试。";$("network-count").textContent="目录加载失败";}
+ weather();fx();setInterval(weather,600000);setInterval(fx,10800000);
+ try{
+  const response=await fetch('network/catalog.json');if(!response.ok)throw Error();const catalog=await response.json();
+  routes=catalog.routes.filter(r=>r.category==='rapid-bus-kl').map((r,i)=>({...r,color:palette[i%palette.length],portrait:DEFAULT.includes(r.id)?portraits[DEFAULT.indexOf(r.id)]:portraits[i%4]}));
+  byId=new Map(routes.map(r=>[r.id,r]));shown=new Set([...shown].filter(id=>byId.has(id)));renderOptions();drawShapes();let scheduled=false;
+  feed=new NetworkFeed({routes:[...shown],onUpdate:list=>{buses=list;if(!scheduled){scheduled=true;setTimeout(()=>{scheduled=false;renderBuses();},250);}},onStatus:s=>{$('connection').textContent=s.connected?'实时':'连接中';$('connection').classList.toggle('online',s.connected);}});feed.start();renderBuses();
+ }catch{$('connection').textContent='加载失败';}
 }
-window.addEventListener("pagehide",()=>feed?.stop());
-window.addEventListener("pageshow",e=>{if(e.persisted)feed?.start();});
-main();
+window.addEventListener('pagehide',()=>feed?.stop());window.addEventListener('pageshow',e=>{if(e.persisted)feed?.start();});main();

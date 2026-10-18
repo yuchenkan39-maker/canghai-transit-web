@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {loadBundle} from '../site/js/core.js';
-import {prepareLines,stopArrivals} from '../site/js/nearby.js';
+import {prepareLines} from '../site/js/nearby.js';
 import {directionChoices,boardingStops} from '../site/js/boarding.js';
 const a={lat:3,lng:101},b={lat:3,lng:101.01},c={lat:3,lng:101.02};
 const s=(id,name,pos)=>({id,name,pos});
@@ -16,15 +16,6 @@ test('rider explicitly selects destination; nearest opposite-side stop is exclud
  const stations=boardingStops(choices[0],{lat:3.00001,lng:101.01});
  assert.equal(stations[0].id,'east');assert.ok(stations.every(x=>x.id!=='west'&&x.id!=='end'));
  assert.equal(stations[0].boarding.destinationName,'East Mall');
-});
-test('direction is matched against all patterns before applying rider selection',()=>{
- const selected=boardingStops(directionChoices(lines)[0],b)[0],now=100000;
- const right={id:'right',route:'R',pos:{lat:3,lng:101.005},gpsMs:now,angle:90,speed:30};
- const wrong={...right,id:'wrong',pos:{lat:3,lng:101.015},angle:270};
- const result=stopArrivals(lines,selected,[right,wrong],now);
- assert.deepEqual(result.arrivals.map(a=>a.bus.id),['right']);assert.equal(result.arrivals[0].headsign,'East Mall');
- const switched=boardingStops(directionChoices(lines)[1],b)[0];
- assert.deepEqual(stopArrivals(lines,switched,[right,wrong],now).arrivals.map(a=>a.bus.id),['wrong']);
 });
 test('loop destination excludes boarding stops after destination, including a physically closer return leg',()=>{
  const loop=prepareLines([{routeId:'L',headsign:'',shape:[a,b,c,{lat:3.0001,lng:101.01},a],stops:[s('terminal','Station',a),s('out','Outbound',b),s('mall','Mall',c),s('back','Return side',{lat:3.0001,lng:101.01}),s('terminal','Station',a)]}]);
