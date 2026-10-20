@@ -2,11 +2,13 @@ import {parseLocal,hhmm,loadBundle,RouteIndex,fxRate} from './core.js';
 import {NetworkFeed} from './live.js';
 import {prepareLines} from './nearby.js?v=clean1';
 import {directionChoices,boardingStops} from './boarding.js';
+import {TABS,menuSections,matchRoutes} from './routemenu.js';
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const DEFAULT=['T7900','T7860','P0010','P0020'],portraits=['dog','gentleman','hamster','cat'];
 const palette=['#2F7FED','#0E9F76','#8B5CF6','#E5487F','#C36C1E','#177E89','#8E5A9D','#657C28'];
 let routes=[],byId=new Map(),shown=new Set(DEFAULT),buses=[],selected=null,feed=null,position=null,rate=null;
+let menuOpen=false,menuTab='all';
 let boardingRoute='',boardingOptions=[],boardingChoice=null,nearbyStop=null,ticket=0,selfMarker=null,accuracy=null,stopMarker=null;
 const shapes=new Map(),loadingShapes=new Map(),markers=new Map();
 try{const saved=JSON.parse(localStorage.getItem('transit.routes'));if(Array.isArray(saved)&&saved.every(x=>typeof x==='string'))shown=new Set(saved);}catch{}
@@ -16,16 +18,27 @@ const shapeLayer=L.layerGroup().addTo(map),stopLayer=L.layerGroup().addTo(map);
 new ResizeObserver(()=>map.invalidateSize()).observe($('map'));
 const routeName=id=>byId.get(id)?.name||id,color=id=>byId.get(id)?.color||'#777',portrait=id=>byId.get(id)?.portrait||'dog';
 const age=ms=>{const n=Math.max(0,Math.round((Date.now()-ms)/1000));return n<60?n+' 秒前':Math.floor(n/60)+' 分钟前';};
-function renderOptions(){
- const q=$('route-search').value.trim().toLowerCase();
- const options=q?routes.filter(r=>(r.name+' '+r.id+' '+r.title).toLowerCase().includes(q)).sort((a,b)=>Number(b.name.toLowerCase()===q)-Number(a.name.toLowerCase()===q)).slice(0,8):[];
- $('route-options').hidden=!q;
- $('route-options').innerHTML=options.map(r=>'<button data-route="'+esc(r.id)+'" aria-pressed="'+shown.has(r.id)+'"><b>'+esc(r.name)+'</b><span>'+esc(r.title)+'</span><i>'+(shown.has(r.id)?'✓':'+')+'</i></button>').join('')||(q?'<p>无匹配线路</p>':'');
- $('route-options').querySelectorAll('button').forEach(button=>button.onclick=()=>{const id=button.dataset.route;shown.has(id)?shown.delete(id):shown.add(id);$('route-search').value='';applySelection();});
- $('selected-routes').innerHTML=[...shown].map(id=>'<button data-route="'+esc(id)+'" aria-label="移除 '+esc(routeName(id))+'" style="--route:'+color(id)+'">'+esc(routeName(id))+' <span>×</span></button>').join('');
- $('selected-routes').querySelectorAll('button').forEach(button=>button.onclick=()=>{shown.delete(button.dataset.route);applySelection();});
+function renderSelected(){
+ $('selected-routes').innerHTML=[...shown].map(id=>'<button type="button" data-route="'+esc(id)+'" aria-label="移除 '+esc(routeName(id))+'" style="--route:'+color(id)+'"><i aria-hidden="true"></i>'+esc(routeName(id))+'<span aria-hidden="true">×</span></button>').join('');
  $('clear-routes').hidden=!shown.size;
 }
+// Route menu: opened by the "线路 ▾" button or by typing; stays open while several routes are ticked.
+const optionHtml=r=>{const on=shown.has(r.id);return '<button type="button" class="route-option" data-route="'+esc(r.id)+'" aria-pressed="'+on+'" style="--route:'+r.color+'"><i class="swatch" aria-hidden="true"></i><b>'+esc(r.name)+'</b><span>'+esc(r.title)+'</span><em aria-hidden="true">'+(on?'✓':'+')+'</em></button>';};
+function renderMenu(){
+ const box=$('route-options');box.hidden=!menuOpen;$('route-menu').setAttribute('aria-expanded',String(menuOpen));
+ if(!menuOpen){box.innerHTML='';return;}
+ const query=$('route-search').value,searching=!!query.trim();
+ const tabs=searching?'':'<div class="menu-tabs" role="group" aria-label="线路分类">'+TABS.map(([key,label])=>'<button type="button" data-tab="'+key+'" aria-pressed="'+(key===menuTab)+'">'+label+(key==='picked'?' · <span class="picked-count">'+shown.size+'</span>':'')+'</button>').join('')+'</div>';
+ const body=menuSections(routes,{tab:menuTab,query,shown}).map(s=>(s.label?'<p class="menu-group">'+esc(s.label)+'</p>':'')+s.routes.map(optionHtml).join('')).join('')||'<p class="menu-empty">'+(searching?'没有匹配的线路':menuTab==='picked'?'还没选线路':'暂无线路')+'</p>';
+ box.innerHTML=tabs+'<div class="menu-list">'+body+'</div><div class="menu-foot"><span>已选 <b class="picked-count">'+shown.size+'</b> 条</span><button type="button" data-done>完成</button></div>';
+}
+function syncMenu(){
+ const box=$('route-options');if(box.hidden)return;
+ box.querySelectorAll('.route-option').forEach(b=>{const on=shown.has(b.dataset.route);b.setAttribute('aria-pressed',String(on));b.querySelector('em').textContent=on?'✓':'+';});
+ box.querySelectorAll('.picked-count').forEach(e=>e.textContent=shown.size);
+}
+function openMenu(){if(!menuOpen){menuOpen=true;renderMenu();}}
+function closeMenu(focusToggle){if(!menuOpen)return;menuOpen=false;$('route-search').value='';renderMenu();if(focusToggle)$('route-menu').focus();}
 async function getShape(id){
  if(shapes.has(id))return shapes.get(id);if(loadingShapes.has(id))return loadingShapes.get(id);
  const route=byId.get(id);if(!route)return null;
@@ -38,12 +51,15 @@ async function getShape(id){
 async function drawShapes(){
  const ids=selected?[selected.split('/')[0]]:shown.size<=6?[...shown]:[];
  const bundles=await Promise.all(ids.map(getShape));shapeLayer.clearLayers();stopLayer.clearLayers();
- ids.forEach((id,i)=>{if(!shown.has(id)||!bundles[i])return;for(const line of bundles[i].lines){
-  L.polyline(line.shape,{color:color(id),weight:3,opacity:selected?.6:.35,interactive:false}).addTo(shapeLayer);
-  if(map.getZoom()>=15)for(const s of line.stops)L.circleMarker(s.pos,{radius:3,color:color(id),weight:1.5,fillColor:'#fff',fillOpacity:1}).bindTooltip(esc(s.name)).addTo(stopLayer);
- }});
+ const drawn=[],weight=selected?6:5,line={lineCap:'round',lineJoin:'round',interactive:false};
+ ids.forEach((id,i)=>{if(shown.has(id)&&bundles[i])for(const l of bundles[i].lines)drawn.push([id,l]);});
+ // All white casings first, then the colours, so the two directions of a route never cut through each other.
+ for(const [,l] of drawn)L.polyline(l.shape,{...line,color:'#fff',weight:weight+4,opacity:.95}).addTo(shapeLayer);
+ for(const [id,l] of drawn)L.polyline(l.shape,{...line,color:color(id),weight,opacity:.92}).addTo(shapeLayer);
+ if(map.getZoom()>=15)for(const [id,l] of drawn)for(const s of l.stops)L.circleMarker(s.pos,{radius:4,color:color(id),weight:2.5,fillColor:'#fff',fillOpacity:1}).bindTooltip(esc(s.name)).addTo(stopLayer);
+ stopMarker?.bringToFront();
 }
-function applySelection(){selected=null;try{localStorage.setItem('transit.routes',JSON.stringify([...shown]));}catch{}feed?.setRoutes([...shown]);renderOptions();drawShapes();renderBuses();if(!$('nearby-panel').hidden)showNearby();}
+function applySelection(){selected=null;try{localStorage.setItem('transit.routes',JSON.stringify([...shown]));}catch{}feed?.setRoutes([...shown]);renderSelected();syncMenu();drawShapes();renderBuses();if(!$('nearby-panel').hidden)showNearby();}
 function focusBus(bus){selected=bus.route+'/'+bus.id;map.flyTo(bus.pos,Math.max(15,map.getZoom()),{duration:.4});getShape(bus.route).then(()=>{drawShapes();renderBuses();});renderBuses();}
 function renderBuses(){
  const visible=buses.filter(b=>shown.has(b.route)),seen=new Set();
@@ -85,9 +101,25 @@ $('boarding-route').onchange=()=>{boardingChoice=null;loadBoardingRoute($('board
 $('boarding-direction').onchange=()=>{boardingChoice=boardingOptions.find(o=>o.key===$('boarding-direction').value)||null;refreshStops();};
 $('find-boarding').onclick=()=>{if(boardingChoice)position?refreshStops():$('locate').click();};
 $('nearest-stop').onclick=()=>{$('nearby-panel').hidden?showNearby():($('nearby-panel').hidden=true);};
-$('route-search').oninput=renderOptions;$('route-search').onkeydown=e=>{if(e.key==='Escape'){$('route-search').value='';renderOptions();}};
-document.addEventListener('click',e=>{if(!e.target.closest('.search'))$('route-options').hidden=true;});
-$('route-search').onfocus=renderOptions;$('clear-routes').onclick=()=>{shown.clear();applySelection();};
+$('route-menu').onclick=()=>menuOpen?closeMenu():openMenu();
+$('route-search').onfocus=openMenu;
+$('route-search').oninput=()=>{menuOpen=true;renderMenu();};
+$('route-search').onkeydown=e=>{
+ const input=e.target;
+ if(e.key==='Escape'){if(input.value){input.value='';renderMenu();}else closeMenu(true);}
+ else if(e.key==='Enter'){const first=matchRoutes(routes,input.value)[0];if(first){e.preventDefault();shown.add(first.id);input.value='';applySelection();renderMenu();}}
+};
+$('route-options').onclick=e=>{
+ const option=e.target.closest('[data-route]'),tab=e.target.closest('[data-tab]');
+ if(option){const id=option.dataset.route;shown.has(id)?shown.delete(id):shown.add(id);applySelection();}
+ else if(tab){menuTab=tab.dataset.tab;renderMenu();}
+ else if(e.target.closest('[data-done]'))closeMenu(true);
+};
+// composedPath keeps the original ancestors even when a click re-rendered (detached) its target.
+document.addEventListener('click',e=>{if(menuOpen&&!e.composedPath().includes($('route-picker')))closeMenu();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menuOpen&&e.target!==$('route-search'))closeMenu(true);});
+$('selected-routes').onclick=e=>{const chip=e.target.closest('[data-route]');if(chip){shown.delete(chip.dataset.route);applySelection();}};
+$('clear-routes').onclick=()=>{shown.clear();applySelection();};
 $('fit').onclick=()=>{const points=buses.filter(b=>shown.has(b.route)).map(b=>b.pos);if(position)points.push(position);if(points.length)map.fitBounds(L.latLngBounds(points),{padding:[50,50],maxZoom:15});};
 $('locate').onclick=()=>{
  const status=$('location-status');if(!navigator.geolocation){status.textContent='无法定位';return;}$('locate').disabled=true;status.textContent='定位中…';
@@ -113,8 +145,9 @@ async function main(){
  weather();fx();setInterval(weather,600000);setInterval(fx,10800000);
  try{
   const response=await fetch('network/catalog.json');if(!response.ok)throw Error();const catalog=await response.json();
-  routes=catalog.routes.filter(r=>r.category==='rapid-bus-kl').map((r,i)=>({...r,color:palette[i%palette.length],portrait:DEFAULT.includes(r.id)?portraits[DEFAULT.indexOf(r.id)]:portraits[i%4]}));
-  byId=new Map(routes.map(r=>[r.id,r]));shown=new Set([...shown].filter(id=>byId.has(id)));renderOptions();drawShapes();let scheduled=false;
+  // The four home routes keep the main app's colours and portraits; the rest take turns through the palette.
+  routes=catalog.routes.filter(r=>r.category==='rapid-bus-kl').map((r,i)=>{const home=DEFAULT.indexOf(r.id);return {...r,color:home>=0?palette[home]:palette[i%palette.length],portrait:home>=0?portraits[home]:portraits[i%4]};});
+  byId=new Map(routes.map(r=>[r.id,r]));shown=new Set([...shown].filter(id=>byId.has(id)));renderSelected();renderMenu();drawShapes();let scheduled=false;
   feed=new NetworkFeed({routes:[...shown],onUpdate:list=>{buses=list;if(!scheduled){scheduled=true;setTimeout(()=>{scheduled=false;renderBuses();},250);}},onStatus:s=>{$('connection').textContent=s.connected?'实时':'连接中';$('connection').classList.toggle('online',s.connected);}});feed.start();renderBuses();
  }catch{$('connection').textContent='加载失败';}
 }
